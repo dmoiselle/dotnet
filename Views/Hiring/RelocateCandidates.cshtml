@@ -1,0 +1,191 @@
+﻿@using Bridge.Web.Validators
+@model RelocatedCandidatesModel
+@{
+    ViewBag.Title = "Candidates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>   
+
+}
+
+ <div id="bia-hiring-filters">
+              <fieldset><legend>Pick Relocation Options</legend>
+                <div id="bia-hiring-target-school" class="bia-hiring-academy">
+                    <label for="bia-academy-dropdown" class="bia-hiring-academy-label">Academy</label>
+                    @Html.DropDownList("academy", Model.TargetSchools, "<Select Item>", new { id = "bia-academy-dropdown" })
+                    <div class="clear-float"></div>
+                </div>        
+                <div class="clear-float"></div>
+                <div id="bia-hiring-candidate-type" class="bia-hiring-candidate-type">
+                    <label for="bia-candidate-type-dropdown" class="bia-hiring-candidate-type-label">Candidate Type</label>
+                    @Html.DropDownList("candidateType", Model.CandidateTypes, new { id = "bia-candidate-type-dropdown" })
+                    <div class="clear-float"></div>
+                </div>      
+              </fieldset>
+            </div>  
+    <div class="bia-righthand_links">
+        <p>
+            
+        </p>
+    </div>
+      
+<div class="clear-float"></div>
+
+<div class="bia-candidate-results-table">
+    <table id="bia-relocate-candidate-table">
+        <thead>
+            <tr>
+                <th class="bia-name">
+                   Candidate 
+                </th>
+                <th class="bia-candidate-type">
+                   Original Academy
+                </th>         
+                @foreach (var week in Model.WeekNumbers)
+                { 
+                    <th class="bia-week-@week-score bia-weekly-score-heading">
+                        Week @week
+                    </th>
+                }    
+                <th class="bia-summary-score">
+                    Summary Score
+                </th>
+                <th class="bia-summary-score">
+                    Star Rating
+                </th>
+                <th class="bia-summary-score">
+                    Vacancy
+                </th>
+                <th class="bia-summary-score">
+                    Relocation <br />Amount
+                </th>
+                <th class="bia-summary-score">
+                </th>
+                
+            </tr>
+        </thead>
+        
+        <tbody>
+        
+            @foreach (var candidate in Model.Candidates) {
+                
+                <tr class="bia-candidate">
+                  @using (Html.BeginForm("RelocateCandidates", "Hiring", FormMethod.Post, new { id = "bia-relocation-form-"+candidate.NationalID })) {
+                    @Html.Hidden("academy", "", new { id = "bia-academy" })
+                    @Html.Hidden("candidateType", "", new { id = "bia-candidate-type" })
+                    @Html.Hidden("vacancies.Index", new { id = "@candidate.NationalID" })
+                    @Html.Hidden("nationalID", @candidate.NationalID)
+                    @Html.Hidden("NationalID_" + candidate.NationalID, candidate.NationalID, new { @class = "bia-candidate-id" })
+                
+                    <td class="bia-name" id="vacancies[@candidate.NationalID].Name">
+                    
+                    @Html.ActionLink(
+                            candidate.FullName,
+                           "CandidateProfile", 
+                             new { id = candidate.NationalID }, new { id = candidate.NationalID }
+                            ) 
+                            
+                    </td>
+                    <td class="bia-candidate-id" id="vacancies[@candidate.NationalID].TargetAreaID">
+                        @candidate.OriginalAcademy 
+                    </td>   
+                    
+                     foreach (var week in Model.WeekNumbers)
+                     {
+                        <td class="bia-week-@week-score bia-weekly-score">
+                            @if (candidate.WeeklyAssessments.Any(a => a.WeekNumber == week))
+                            {
+                                @string.Format("{0:0%}", candidate.WeeklyAssessments.First(a => a.WeekNumber == week).Score)
+                            }
+                            else
+                            {
+                                <text>--</text>
+                            }
+                        </td>
+                     }            
+                    <td class="bia-summary-score" id="vacancies[@candidate.NationalID].SummaryScore">
+                        @if (candidate.SummaryScore.HasValue)
+                        {
+                            @string.Format("{0:0%}", candidate.SummaryScore)
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                    </td>
+                    <td class="bia-summary-score" id="vacancies[@candidate.NationalID].StarGrade">
+                        @if (candidate.StarGrade.HasValue)
+                        {
+                            <span class="rating-static rating-@candidate.StarGrade"></span>
+                        }
+                        else
+                        {
+                            <span class='rating-static rating-0'></span>
+                        }
+                    </td>
+                    <td class="availablePositions" id="vacancies[@candidate.NationalID].SerialNumber">                      
+                        
+                        @Html.DropDownList("AssignedVacancy", candidate.AssignedPositions, "<Select Item>", new { id = "bia-vacancies-dropdown-" + candidate.NationalID })
+                        
+                        @Html.ValidationMessage("NotAssignedVacancy_" + candidate.NationalID)
+                    </td>              
+                    <td class="bia-summary-score" id="vacancies[@candidate.NationalID].RelocationAmount">
+                    
+                        @Html.TextBox("relocationAmount", candidate.RelocationAmount, new { id = "bia-relocationAmount-"+candidate.NationalID, @class = "bia-relocationAmount-text" })
+                        @if (candidate.RelocationAmount != string.Empty && StringCurrencyValidator.isValid( candidate.RelocationAmount ) == false) {
+                            <span class="error">invalid amount</span>
+                        }
+                        
+                    </td>
+                    <td> 
+                    <input type="submit" value="Assign Vacancy" id="bia-position-assignment-@candidate.NationalID" class="bia-position-assign-button" />
+                    </td>
+                    }
+                </tr>           
+                
+            }
+        </tbody>
+    </table>
+    
+</div>
+
+    
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#bia-relocate-candidate-table").dataTable({
+                "bProcessing": true,
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [8, 9, 10] }
+                    ],
+                "fnDrawCallBack": function () { BindSubmitButton(); }
+            });
+
+            var relocationgui = new bia_relocate_candidates();
+            relocationgui.Initialize();
+
+        });
+
+        function BindSubmitButton() {
+
+            $(".bia-position-assign-button").each(function () {
+                $(this).unbind();
+                $(this).bind("click", function () {
+                    var nationalID = $(this).closest('tr').find('.bia-candidate-id').val();
+                    $("#bia-relocation-form-" + nationalID).submit(function () { });
+
+                });
+            });
+        }                 
+        
+
+
+    </script>
+}

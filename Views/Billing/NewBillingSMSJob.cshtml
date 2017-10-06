@@ -1,0 +1,64 @@
+﻿@model Bridge.Web.Models.NewBillingSMSJobModel
+
+@{
+    ViewBag.Title = "New Billing SMS Job";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Billing SMS Job</h2>
+
+@using (Html.BeginForm("NewBillingSMSJob", "Billing", FormMethod.Post))
+{
+    <div class="bia-billing-sms-job-wrapper">
+        <table id="bia-billing-sms-job-table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <label>
+                        Billing SMS Job:
+                    </label>
+                </td>
+                <td>
+                     @Html.DropDownList("SMSJobType", Model.SMSJobTypes, new { @id = "SMSJobType" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Next Run:
+                </td>
+                <td >
+                   @Html.TextBox("NextRun", Model.NextRun != DateTime.MinValue ? Model.NextRun.ToString("dd/MMM/yyyy") : "", new { @class = "date", @id = "NextRun" })
+                   @Html.ValidationMessageFor(m => m.NextRun)
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top;">
+                    SMS Template:
+                </td>
+                <td>
+                   @Html.TextArea("SMSTemplate", Model.SMSTemplate, new { @cols = "60", @rows = "18" })
+                   @Html.ValidationMessageFor(m => m.SMSTemplate)
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" id="bia-billing-sms-job-save" value="Save" />
+                    <input type="button" id="bia-billing-sms-job-cancel" value="Cancel" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+<script type="text/javascript" charset="utf-8">
+
+    $(document).ready(function () {
+        $('.date').datepicker({ dateFormat: "d/M/yy", minDate: +0 });
+
+        $('#bia-billing-sms-job-cancel').unbind('click').bind('click', function () {
+            window.location = "/Billing/BillingSMSJobs"
+        });
+
+    }); 
+
+</script>

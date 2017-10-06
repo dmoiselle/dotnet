@@ -1,0 +1,420 @@
+﻿@model PositionAssignmentModel
+
+@{
+    ViewBag.Title = "PositionAssignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>
+}
+
+<div id="bia-assignees-for-academy">
+    <h4> Assign:  @Model.ContractType @Model.Classification (@Model.SerialNumber)  for @Model.Academy </h4>
+    <input type="hidden" id="bia-assignees-academy-filter" value="@Model.PositionFilter.Academy" />
+    <input type="hidden" id="bia-assignees-position-status-filter" value="@Model.PositionFilter.PositionStatus" />
+    <input type="hidden" id="bia-assignees-candidate-type-filter" value="@Model.PositionFilter.CandidateType" />
+</div>
+<div class="bia-assignees-table-wrapper">
+
+    <table id="bia-assignees-table" style="width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2">
+                    Name
+                </th>
+                @if (Model.RecruitmentAssessmentTypes.Count() > 0)
+                {
+                <th colspan="@Model.RecruitmentAssessmentTypes.Count()" style="border:inherit;white-space:nowrap;text-align:center;">
+                    Recruitment Scores (%)
+                </th>
+                }
+                <th colspan="@Model.TrainingAssessmentTypes.Count()" style="border:inherit;border-left:1px solid #D3D3D3;white-space:nowrap;text-align:center;">
+                    Training Scores (%)
+                </th> 
+                <th rowspan="2">
+                    Summary Score
+                </th>
+                <th rowspan="2">
+                    Rating
+                </th>
+                <th rowspan="2">
+                    Facilitator Rec.
+                </th>
+                <th rowspan="2">
+                    Facilitator Remarks
+                </th>
+                <th rowspan="2">
+                  <input type="hidden" id="bia-assignees-recruitment-assessment-types-count" value="@Model.RecruitmentAssessmentTypes.Count()" />
+                  <input type="hidden" id="bia-assignees-training-assessment-types-count" value="@Model.TrainingAssessmentTypes.Count()" />
+                  <input type="hidden" id="bia-assignees-serial-number" value="@Model.SerialNumber" />
+                  <input type="hidden" id="bia-assignees-academy-id" value="@Model.AcademyID" />
+                  <input type="hidden" id="bia-assignees-candidate-type" value="@Model.CandidateType" />
+                </th>
+            </tr>
+            <tr>                
+                @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                {
+                  <th>
+                    @assessmentType.ToString()
+                  </th>  
+                }
+                @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                {
+                    <th>
+                        @assessmentType.ToString()
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>  
+            @foreach (var assignee in Model.Assignees.Where(a => a.AcademyID == Model.AcademyID))
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(assignee.FullName, "CandidateProfile", "Training", new { id = assignee.NationalID }, new { id = assignee.NationalID })
+                        <input class="bia-assignees-fullname" type="hidden" value="@assignee.FullName"/> 
+                        <input class="bia-assignees-nationalid" type="hidden" value="@assignee.NationalID" />
+                    </td>
+                    @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                    {
+                  <td>
+                    @if (assignee.AssessmentAverages.ContainsKey(assessmentType))
+                    {
+                        @string.Format("{0:0}", assignee.AssessmentAverages[assessmentType])
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                  </td>  
+                    }
+                    @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                    {
+                  <td>
+                    @if (assignee.AssessmentAverages.ContainsKey(assessmentType))
+                    {
+                        @string.Format("{0:0}", assignee.AssessmentAverages[assessmentType])
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                  </td>  
+                    }
+                    <td>
+                         @if (assignee.SummaryScore.HasValue)
+                         {
+                            @string.Format("{0:0%}", assignee.SummaryScore)
+                         }
+                         else
+                         {
+                            <text>--</text>
+                         } 
+                    </td>
+                    <td>
+                        @if (assignee.Rating.HasValue)
+                        {
+                            @assignee.Rating
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                    </td>
+                    <td>
+                        @assignee.Recommendation 
+                    </td>
+                    <td>
+                        @assignee.Remarks 
+                    </td>
+                    <td>
+                        <input type="button" class="bia-assignees-assign-button" value="Select" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<br />
+<div>
+    <h4> Assign: @Model.ContractType @Model.Classification (@Model.SerialNumber) to candidate from other academies </h4>
+</div>
+<div class="bia-assignees-table-wrapper">
+
+    <table id="bia-other-assignees-table" style="width:100%">
+        <thead>
+            <tr>                
+                <th rowspan="2">
+                    Name
+                </th>
+                @if (Model.RecruitmentAssessmentTypes.Count() > 0)
+                {
+                    <th colspan="@Model.RecruitmentAssessmentTypes.Count()" style="border:inherit;white-space:nowrap;text-align:center;">
+                    Recruitment Scores (%)
+                </th>
+                }
+                <th colspan="@Model.TrainingAssessmentTypes.Count()" style="border:inherit;border-left:1px solid #D3D3D3;white-space:nowrap;text-align:center;">
+                    Training Scores (%)
+                </th> 
+                <th rowspan="2">
+                    Summary Score
+                </th>
+                <th rowspan="2">
+                    Rating
+                </th>
+                <th rowspan="2">
+                    Facilitator Rec.
+                </th>
+                <th rowspan="2">
+                    Facilitator Remarks
+                </th>
+                <th rowspan="2">
+                    Academy
+                </th>
+                <th rowspan="2">
+                  
+                </th>
+            </tr>
+            <tr>                
+                @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                {
+                  <th>
+                    @assessmentType.ToString()
+                  </th>  
+                }
+                @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                {
+                    <th>
+                        @assessmentType.ToString()
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>  
+            @foreach (var assignee in Model.Assignees.Where(a => a.AcademyID != Model.AcademyID))
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(assignee.FullName, "CandidateProfile", "Training", new { id = assignee.NationalID }, new { id = assignee.NationalID })
+                        <input class="bia-assignees-fullname" type="hidden" value="@assignee.FullName"/> 
+                        <input class="bia-assignees-nationalid" type="hidden" value="@assignee.NationalID" />
+                    </td>
+                    @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                    {
+                  <td>
+                    @if (assignee.AssessmentAverages.ContainsKey(assessmentType))
+                    {
+                        @string.Format("{0:0}", assignee.AssessmentAverages[assessmentType])
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                  </td>  
+                    }
+                    @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                    {
+                  <td>
+                    @if (assignee.AssessmentAverages.ContainsKey(assessmentType))
+                    {
+                        @string.Format("{0:0}", assignee.AssessmentAverages[assessmentType])
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                  </td>  
+                    }
+                    <td>
+                         @if (assignee.SummaryScore.HasValue)
+                         {
+                            @string.Format("{0:0%}", assignee.SummaryScore)
+                         }
+                         else
+                         {
+                            <text>--</text>
+                         } 
+                    </td>
+                    <td>
+                        @if (assignee.Rating.HasValue)
+                        {
+                            @assignee.Rating
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                    </td>
+                    <td>
+                        @assignee.Recommendation 
+                    </td>
+                    <td>
+                        @assignee.Remarks 
+                    </td>
+                    <td class="bia-assignees-academy" academyid="@assignee.AcademyID">
+                        @assignee.Academy                        
+                    </td>
+                    <td>
+                        <input type="button" class="bia-assignees-assign-button" value="Select" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div style="display:none">
+    <div id="bia-assignees-confirm-assign" class="dialog">
+        
+    </div>
+</div>
+
+@section PageSpecificScripts {
+ <script type="text/javascript">
+     $(document).ready(function () {
+
+        InitializeTable();
+
+     });
+
+    function InitializeTable() {
+
+        var recruitmentCount = parseInt($("#bia-assignees-recruitment-assessment-types-count").val(), 10);
+        var trainingCount = parseInt($("#bia-assignees-training-assessment-types-count").val(), 10);
+        // assign button column
+        var btncolidx = 5 + (recruitmentCount + trainingCount);
+        var btncolidxother = 6 + (recruitmentCount + trainingCount);
+        var scoreidx = 1 + (recruitmentCount + trainingCount);
+        
+        var _assigneesTable = $("#bia-assignees-table").dataTable({
+                "bProcessing": true,
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [btncolidx] }
+                    ],
+                "fnDrawCallback": function () {
+                    BindButtonColumn();
+                },
+                "aaSorting": [[scoreidx, "desc"], [0, "asc"]]
+            });
+
+         var _otherAssigneesTable = $("#bia-other-assignees-table").dataTable({
+                "bProcessing": true,
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [btncolidxother] }
+                    ],
+                "fnDrawCallback": function () {
+                    BindButtonColumn();
+                },
+                "aaSorting": [[scoreidx, "desc"], [0, "asc"]]
+            });
+
+        }
+
+        function GetRelocationAmount() {
+            var relocationAmount = $("#bia-assignees-relocation-amount").val();
+            
+            if (relocationAmount === undefined || relocationAmount === null || isNaN(relocationAmount) || parseFloat(relocationAmount) < 0) {
+                relocationAmount = "";
+            }
+
+            return relocationAmount;
+        }
+
+        function BindButtonColumn() {
+
+            $(".bia-assignees-assign-button").unbind("click").bind("click", function () {
+
+                var serialNumber = $('#bia-assignees-serial-number').val();
+                var academyId = $('#bia-assignees-academy-id').val();
+                var candidateType = $('#bia-assignees-candidate-type').val();
+                var nationalID = $.trim($(this).closest('tr').find('.bia-assignees-nationalid').val());
+                var content = $.trim($('#bia-assignees-for-academy').text());
+                var candidateName = $.trim($(this).closest('tr').find(".bia-assignees-fullname").val());
+                var assigneeAcademyID = $($(this).closest('tr').find(".bia-assignees-academy").eq(0)).attr("academyid");
+
+                $("#bia-assignees-confirm-assign:ui-dialog").dialog("destroy");
+                var arr = [];
+                arr.push("<table style='border:0px' border='0' cellspacing='0' cellpadding='0'>");
+                var relocate = (assigneeAcademyID !== undefined && assigneeAcademyID != null);
+                if (relocate) {
+                    arr.push("<tr><td id='bia-assignees-relocation-error' colspan='2' style='border:0px;display:none;color:#ff0000'>Relocation candidate. You must enter a valid relocation amount. Enter zero (0) if not applicable</td></tr>");
+                    arr.push("<tr><td style='width:50%;border:0px;'>Enter relocation amount:&nbsp;</td><td style='width:50%;border:0px;'><input id='bia-assignees-relocation-amount' type='text' /></td></tr>");
+                }
+                arr.push("<tr><td colspan='2' style='border:0px;'>");
+                arr.push(content + " to " + candidateName + ". Do you want to continue?");
+                arr.push("</td></tr></table>");
+                $("#bia-assignees-confirm-assign").html(arr.join(""));
+                $("#bia-assignees-confirm-assign").dialog({
+                    title: "Assign position",
+                    resizable: "false",
+                    modal: true,
+                    width: "420",
+                    buttons: {
+                        "Yes and continue": function () {
+                            var relocationAmount = GetRelocationAmount();
+                            var relocationAmountFilter = "";
+                            if (relocate && relocationAmount === "") {
+                                $("#bia-assignees-relocation-error").show();
+                            } else {
+                                if(relocate)
+                                    relocationAmountFilter= "&relocationAmount=" + relocationAmount;
+
+                                $.post("/Hiring/AssignPosition/?serialNumber=" + serialNumber + "&nationalID=" + nationalID + relocationAmountFilter, function (result) {
+
+                                    if (result == serialNumber) {
+                                        window.location = "/Hiring/Positions/?" + GetFilters();
+                                    } else {
+                                        bia_show_dialog("Error", result);
+                                    }
+                                });
+                                $(this).dialog("close");
+                            }
+                        },
+                        "Yes. Load Next": function () {
+                            var relocationAmount = GetRelocationAmount();
+                            var relocationAmountFilter = "";
+                            if (relocate && relocationAmount === "") {
+                                $("#bia-assignees-relocation-error").show();
+                            } else {
+                                if(relocate)
+                                    relocationAmountFilter= "&relocationAmount=" + relocationAmount;                            
+                                 
+                                $.post("/Hiring/AssignPosition/?serialNumber=" + serialNumber + "&nationalID=" + nationalID + relocationAmountFilter, function (result) {
+                                    if (result == serialNumber) {
+                                        window.location = "/Hiring/NextPosition/?serialNumber=" + serialNumber + "&" + GetFilters();
+                                    } else {
+                                        bia_show_dialog("Error", result);
+                                    }
+                                });
+                                $(this).dialog("close");
+                            }
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+
+
+            });
+        }
+
+        function GetFilters(){
+            
+            var academy = $("#bia-assignees-academy-filter").val();
+            var positionStatus = $("#bia-assignees-position-status-filter").val();
+            var candidateType = $("#bia-assignees-candidate-type-filter").val();
+
+            return bia_construct_position_filter(academy, positionStatus, candidateType);
+        }
+
+</script>
+}

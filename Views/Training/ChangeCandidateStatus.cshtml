@@ -1,0 +1,51 @@
+﻿@model  CandidateHistoryEntryModel
+@{
+    ViewBag.Title = "CandidateChangeStatus";
+}
+
+@using (Html.BeginForm("UpdateCandidateStatus", "Training", FormMethod.Post, new { @id = "bia-candidate-history-entry-form" })) {
+    <div>
+        
+        @if (Model.candidateID != null) {
+            <fieldset>
+                <legend>Select New Candidate Status:</legend>
+                <div id="bia-candidate-status-options">
+                    @Html.Hidden("CandidateID", Model.candidateID)
+                    @Html.Hidden("id", Model.candidateNationalID)
+                    <div id="bia-candidate-statuses" class="bia-candidate-status-option">
+                                           
+                        @Html.DropDownList("CandidateStatusSelect", new SelectList(Model.CandidateStatuses, "Value", "Text", Model.currentStatus))
+                        <div class="clear-float"></div><br />
+                    </div>
+                    <div id="bia-candidate-status-change-notes">
+                        <label for="CandidateType">Reasons for change of status:</label><br />
+                        @Html.TextArea("Notes", Model.Notes)
+                    
+                        <div class="clear-float"></div>
+                    </div>
+                    <div class="clear-float"></div><br /><br />
+                    @Html.Hidden("CandidateState")
+                    @Html.Hidden("Notes")
+                    <input type="submit" value="Change Status"  id="bia-status-submit-button" />
+                    
+                </div>          
+            </fieldset>        
+        }
+    </div>
+}  
+    
+ @section PageSpecificScripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+         
+            var candidateStatusGUI = new bia_candidate_status();
+            candidateStatusGUI.Initialize();
+
+        });
+
+    </script>    
+
+}
+

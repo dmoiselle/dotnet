@@ -1,0 +1,33 @@
+﻿@model VacancyAssigmentModel
+@if (Model.AvailableVacancies.Count() > 0)
+{            
+     <form id="FormAssignVacancy-@Model.NationalID" method="post">
+    
+        @Html.DropDownList("SerialNumber", Model.AvailableVacancies,"<Select Item>");
+        @Html.Hidden("NationalID", Model.NationalID);                                                                              
+        <input type="submit" value="OK" id="submitVacancyAssignment-@Model.NationalID;"/> <text>or</text> <a href="#" id="cancel-vacancyAssignment-@Model.NationalID">Cancel</a>
+
+    </form>
+    
+}
+else
+{
+    <text>Sorry, No vacancies found.</text>
+}
+<script type="text/javascript">
+    $("#cancel-vacancyAssignment-@Model.NationalID").click(function () {
+        $("#FormAssignVacancy-@Model.NationalID").hide();
+        $("#FormAssignVacancy-@Model.NationalID").html();
+    });
+    $("#FormAssignVacancy-@Model.NationalID").submit(
+        function () {
+            event.preventDefault(); 
+            $.post(
+            "/Hiring/AssignVacancyToCandidate",
+           $("#FormAssignVacancy-@Model.NationalID").serialize(),
+            function (data) {
+                alert(data);
+            });        
+    });
+    
+</script>

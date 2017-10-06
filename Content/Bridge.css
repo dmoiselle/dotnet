@@ -1,0 +1,713 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color.
+----------------------------------------------------------*/
+html { overflow-y: scroll; }
+html, body
+{
+    font-family: Lucida Grande, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
+    font-size: 12px; /* Base font size: jquery UI font sizes, themes, padding, etc are set in relative em units */
+    margin: 0;
+    padding: 0;
+    color: #696969;
+}
+
+a:link { color: #034af3; text-decoration: underline; }
+a:visited { color: #505abc; }
+a:hover { color: #1d60ff; text-decoration: none; }
+a:active { color: #12eb87; }
+
+p, ul { margin-bottom: 20px; line-height: 1.6em; }
+
+h1, h2, h3, h4, h5, h6 { font-size: 1.5em; color: #000; }
+
+h1 { font-size: 2em; padding-bottom: 0; margin-bottom: 0; }
+h2 { padding: 0 0 10px 0; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.1em; }
+h5, h6 { font-size: 1em; }
+
+/* this rule styles <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2 { margin-top: 0; }
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser percentage for the 
+page width. Or, you can specify an exact pixel width. */
+.page { width: 90%; margin-left: auto; margin-right: auto; }
+
+#header { position: relative; margin-bottom: 0px; color: #000; padding: 0; }
+#header h1 {
+    font-weight: bold;
+    padding: 5px 0;
+    margin: 0;
+    color: #fff;
+    border: none;
+    line-height: 2em;
+    font-size: 32px !important;
+}
+
+#main
+{
+    padding: 10px;
+    padding-top:0px;
+    background-color: #fff;
+    margin: 5px 3% auto 3%;
+}
+
+#main-hiring-candidates
+{
+    padding: 15px 0px 15px 30px;
+    background-color: #fff;
+    margin: 5px 0px 5px 30px;
+    width: 1324px;
+}
+
+#footer
+{
+    color: #999;
+    padding: 10px 0;
+    text-align: center;
+    line-height: normal;
+    margin: 0;
+    font-size: .9em;
+}
+
+#data {
+	width: 100%;
+	overflow: auto;
+}
+
+#header img#bia-logo { margin: 5px 0 0 25px; }
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset { border: 1px solid #ddd; padding: 10px; margin: 0; }
+legend { font-size:1.2em; font-weight: bold; }
+textarea { min-height: 75px; }
+input[type="text"] { width: 200px; border: 1px solid #CCC; }
+input[type="password"] { width: 200px; border: 1px solid #CCC; }
+
+/* TABLE
+----------------------------------------------------------*/
+
+table { border: solid 1px #e8eef4; border-collapse: collapse; }
+table td { padding: 5px; border: solid 1px #e8eef4; }
+table th { padding: 6px 5px; text-align: left; background-color: #e8eef4; border: solid 1px #e8eef4; }
+
+table.bia-sortable { font-size: 12px; border: 1px solid #000; }
+table.bia-sortable .header {
+	background-image: url("./images/bg.gif");
+	background-repeat: no-repeat;
+	background-position: right center;
+	border-left: 1px solid #FFF;
+	border-right: 1px solid #000;
+	border-top: 1px solid #FFF;
+	padding-left: 5px;
+	padding-top: 8px;
+	height: auto;
+}
+table.bia-sortable .headerSortUp { background-image: url("./images/asc.gif"); background-repeat: no-repeat; }
+table.bia-sortable .headerSortDown { background-image: url("./images/desc.gif"); background-repeat: no-repeat; }
+table.bia-sortable .headerSortUp, table.bia-sortable .headerSortDown { background-color: #8DBDD8; color: #333333; }
+
+.DataTables_sort_wrapper .css_right { float: right; }
+
+.hiring-dashboard-table 
+{   
+    border: 0px none;
+    border-collapse:separate;
+    border-spacing: 5px;
+    width:100%;
+}
+
+.hiring-dashboard-table td.left
+{    
+    border: medium solid #8BBF40;
+    padding: 5px 15px 15px 15px;
+    width: 50%;
+    vertical-align: top;  
+    font-size: 1.1em;
+    margin-top: 0px;
+    margin-right: 45px;
+    margin-bottom: 15px;
+    margin-left: 15px;  
+}
+
+.hiring-dashboard-table td.right 
+{    
+    border: medium solid #8BBF40;
+    padding: 5px 15px 15px 15px;
+    width: 50%;
+    vertical-align: top;  
+    font-size: 1.1em;
+    margin-top: 0px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-left: 45px;  
+}
+
+ .hiring-dashboard-table td h4 
+{    
+    font-family:Arial Narrow, Microsoft Sans Serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.2em;
+    /*background-color: #d3e8a3;*/
+    padding: 5px;
+    background: -moz-linear-gradient(left, #d3e8a3, #fff);
+    margin: 5px 0px 5px 0px;
+}
+
+.hiring-dashboard-table td div.rating
+{
+    padding-left:15px;
+    padding-top:12px;
+}
+
+.hiring-dashboard-table table 
+{    
+    border-width: 0px;
+    padding: 0px;
+    margin-bottom: 0px;  
+}
+
+.hiring-dashboard-table table td 
+{    
+    border-width: 0px;
+    padding: 2px 3px 7px 2px; 
+    vertical-align: top;    
+    margin-bottom: 0px;
+}
+
+.hiring-dashboard-table table td.total
+{
+    width: 8%;
+}
+.hiring-dashboard-table table td.description
+{
+    width:28%;
+}
+.hiring-dashboard-table table td.assigned 
+{
+    width:16%;
+}
+.hiring-dashboard-table table td.available
+{
+    width: 18%;
+}
+.hiring-dashboard-table table td.backup 
+{
+    width:14%;
+}
+.hiring-dashboard-table table td.rejected
+{
+    width: 16%;
+}
+
+.hiring-dashboard-table td p
+{
+    padding-top: 0px;
+    padding-bottom:0px;
+    padding-left:15px;
+}
+/* MISC  
+----------------------------------------------------------*/
+.clear-float { clear: both; display: block; float: none; max-height: 0; overflow: hidden; }
+.error { color: Red; }
+
+#bia-login
+{
+    background-color: rgb(139,191,64);
+    border-radius: 0 0 7px 7px;
+    display: block;
+    color: #FFFFFF;
+    float: right;
+    font-size: 14px;
+    text-align: center;
+    margin: 0 40px 0 0;
+    padding: 2px 10px 7px;
+}
+#bia-login.hover { opacity: 0.8; }
+#bia-login.hover a { border-bottom: solid 2px lime; }
+#bia-login a:link { color: white; text-decoration: none; }
+#bia-login a:visited { color: white; text-decoration: none; }
+
+.bia-login-form input[type="text"], .bia-login-form input[type="password"] 
+{
+    border-radius: 5px;
+    padding: 4px 6px;
+}
+
+#bia-header-separator  
+{
+    background-color: #8BBF40; 
+    height: 40px;
+}
+#hiring-dashboard-navigation 
+{
+    margin-top: -26px;
+}
+
+#hiring-dashboard-navigation ul{ /*put the subnav below  */
+    
+    position: relative;
+    padding-top: 5px;
+    left: 0;
+    background-color: #a4c772;
+    height: 28px;
+	width: 740px;
+	padding-left: 60px;
+	padding-bottom:5px;
+	margin-left: 160px;
+	margin-top:0px;
+}
+
+#hiring-dashboard-navigation li{
+    display: inline-block;
+    font-size: 14px;
+    list-style-type: none;
+    /*background-color:#8BBF40;*/
+    padding:5px;
+    text-align: center;
+    width: 150px;
+}
+
+#hiring-dashboard-navigation li .active a
+{
+    font-weight:bold;
+}
+
+#hiring-dashboard-navigation li a
+{
+    text-decoration: none;
+    color: White;
+}
+
+#hiring-dashboard-navigation li a:hover
+{
+    text-decoration: none;
+    color: White;
+    font-weight:bold;
+}
+   
+.bia-main-menu {margin:0 0;margin-top:12px;padding:0;background-color:#8bbf40;height:40px;width:100%; }
+
+.bia-main-menu ul  
+{
+    padding:0 0 0 3%;
+    margin-top:0px;
+    margin-bottom:0px;
+    vertical-align:middle;
+}
+
+.bia-main-menu ul li 
+{
+    display: inline-block;
+    font-size: 16px;
+    list-style-type: none;
+    margin: 0px 10px 0px 0px; /*left:5px*/
+    padding:10px 0px;
+    text-align: center; 
+    width: 140px;
+    height: 20px;
+    vertical-align:middle;
+}
+
+.bia-main-menu ul li.selected
+{
+    background-color:#A4C772;
+}
+
+.bia-main-menu ul li a{
+    color :#ffffff;
+    font-weight:bold;
+    text-decoration: none;   
+}
+
+.bia-main-menu ul li a:hover
+{
+    color: #ffffff;
+    font-size:large;  
+}
+
+.bia-main-menu ul li a:active
+{
+    font-weight: bold;    
+}
+
+.hidden
+{
+    display:none;
+}
+
+.bia-sub-menu
+{
+    height:30px;background-color:#A4C772;margin:auto 3% auto 3%;
+}
+
+.bia-sub-menu ul
+{
+    padding:0 0 0 1%;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    list-style-type: none;
+}
+
+.bia-sub-menu ul li
+{  
+    list-style-type:none;
+    font-size: 14px;
+    float:left;
+    margin-right:15px;
+    margin-left:15px;
+    width:120px;
+}
+
+.bia-sub-menu ul li a
+{
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.bia-sub-menu ul li.selected a
+{
+    font-weight:bold;
+}
+
+.bia-sub-menu ul li a:hover
+{
+    font-weight:bold;
+}
+
+.field-validation-error { color: #ff0000; }
+.field-validation-valid { display: none; }
+.input-validation-error { border: 1px solid #ff0000; background-color: #ffeeee; }
+.validation-summary-errors { font-weight: bold; color: #ff0000; }
+.validation-summary-valid { display: none; }
+
+.display-label, .editor-label { margin: 1em 0 0 0; }
+.display-field, .editor-field { margin:0.5em 0 0 0; }
+
+.bia-hiring-candidate-filters {margin: 0px; padding: 0px;}
+
+#bia-hiring-candidate-filters 
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 15px 0px 15px 0px;
+    width: 100%;
+    -moz-border-radius: 6px; 
+} 
+
+#bia-candidate-filters 
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 15px 0px 15px 0px;
+    width: 100%;
+    -moz-border-radius: 6px; 
+}
+
+#bia-assessment-filters 
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 15px 0px 15px 0px;
+    width: 100%;
+    -moz-border-radius: 6px; 
+}
+    
+.bia-training-site { float:left;padding-left:15px;width:280px; } /*float:left; font-size: 12px; padding-bottom:5px; padding-top:3px; padding-right: 20px;*/
+.bia-training-class  { float:left;padding-left:15px;width:280px; } /*float:left; font-size: 12px; padding-bottom:5px; padding-top:3px; padding-right: 20px;*/
+.bia-candidate-type  { float:left;padding-left:15px;width:280px; }  /*float:left; font-size: 12px; padding-bottom:5px; padding-top:3px;*/
+.bia-training-site select {margin-left: 15px;}
+.bia-training-class select {margin-left: 15px;}
+.bia-candidate-type  select {margin-left: 15px;}
+.bia-training-site select option, 
+.bia-training-class select option,
+.bia-candidate-type select option { padding:2px; }
+ 
+#bia-assessments-table,
+#bia-hiring-filters 
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 10px 20px; 
+    width: 350px;
+    -moz-border-radius: 6px; 
+}
+
+
+.bia-enter-assessment-results { float: right; }
+.bia-righthand_links { float: right; margin:5px; }
+.bia-button_links { margin: 5px; }
+.bia-candidates-heading { margin-top: 25px; }
+.bia-candidates-heading > div { float: left; font-weight: bold; }
+.bia-candidates li { list-style-type: none; }
+.bia-candidates li div { float: left; }
+.bia-candidates { margin: 0; padding: 0; }
+.bia-name { width: 200px; }
+
+.bia-weekly-score, .bia-weekly-score-heading { width: 80px; }
+.bia-assessment-type, .bia-assessment-type-heading { width: 80px; }
+
+#bia-assessments-table .lineitem {
+    clear:left;    
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+#bia-assessments-table .label {
+    width:120px;    
+    float:left;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#bia-assessments-table .item {
+    width:150px;    
+    float:left;
+    margin-left: 5px;
+    text-align: left;
+}
+
+.bia-candidate-status-label { color: rgb(87,87,87); float: left;}
+
+.bia-candidate-profile-data { color: Green; }
+#bia-candidate-profile table td { border-style:none; }
+
+.bia-hiring-academy-label,
+.bia-hiring-candidate-type-label,
+
+.bia-hiring-filter-label { color: rgb(87,87,87); float: left; font-weight: bold; }
+#bia-recruitment-cycle-value { float: left; margin-left: 8px; }
+
+.bia-star-rating-label,
+.bia-candidate-type-label,
+.bia-target-school-label,
+.bia-hiring-target-school-label,
+.bia-hiring-status-label {}
+
+.bia-hiring-academy,
+.bia-hiring-candidate-type,
+.bia-hiring-candidate,  
+
+
+.bia-candidate-status  select,
+.bia-star-rating select,
+.bia-target-school select,
+.bia-hiring-target-school select,
+.bia-hiring-status select,
+.bia-hiring-academy select,  
+.bia-hiring-candidate-type select,
+.bia-hiring-candidate select { float: left; font-size: 16px; margin: -3px 0 0 8px; padding: 4px; }
+
+.bia-hiring-academy select option,
+.bia-hiring-candidate-type select option,
+.bia-hiring-candidate select option, 
+.bia-star-rating select option,
+.bia-target-school select option,
+.bia-hiring-target-school select option,
+.bia-hiring-target-school select option, 
+.bia-hiring-status select option { padding: 2px; }
+
+
+.bia-hiring-star-rating,
+.bia-target-school { font-size: 16px; margin: 15px 0px 35px 0px;}
+
+.bia-hiring-candidate-options { float: left; padding-left: 15px; }
+.bia-hiring-candidate-option { float:left; padding-left: 15px; }
+.bia-hiring-candidate-option label { clear: left; float: left; }
+.bia-hiring-candidate-option select { float: left; margin-left: 15px; }
+.bia-hiring-candidate-table-wrapper, .bia-hiring-contracts-table-wrapper{ margin-top : 10px; }
+
+#bia-hiring-candidate-filters #bia-target-academy-dropdown{ width: 280px; }
+#bia-hiring-candidate-filters #bia-star-rating-dropdown{ width: 80px; }
+#bia-hiring-candidate-filters #bia-candidate-type-dropdown{ width: 160px; }
+#bia-hiring-candidate-filters #bia-hiring-status-dropdown{ width: 100px; }
+
+.bia-candidate-status {}
+
+.bia-star-grade { float: right; padding: 0 0 0 5px; }
+
+/**styling for star rating system*/
+.rating-static { 
+    width: 60px; 
+    height: 16px;  
+    display: block; 
+    background: url('images/star-rating.png') 0 0 no-repeat;
+}
+
+.rating-5 { background-position: 0 0; }
+.rating-4 { background-position: -12px 0; } 
+.rating-3 { background-position: -24px 0; }
+.rating-2 { background-position: -36px 0; }
+.rating-1 { background-position: -48px 0; }
+.rating-0 { background-position: -60px 0; }
+
+.bia-candidate-results-table { margin: 20px 0 0 0; }
+.bia-candidate-results-table table { width: 100%; }
+
+.bia-hiring-candidate-results-table { margin: 20px 0 0 0; }
+.bia-hiring-candidate-results-table table { width: 100%; }
+
+.bia-wage-grades-list-table { margin: 20px 0 0 0; }
+.bia-wage-grades-list-table table { width: 100%; }
+.bia-wage-grades-list-table td {font-size:small;}
+
+.bia-wage-grade-table { margin: 20px 0 0 0; }
+.bia-wage-grade-table table { width: 100%; border-width:thin;}
+.bia-wage-grade-table table td{ border-style:none; width: 200px; font-size:small;}
+.bia-wage-grade-table table td input{background: #fffdf7;}
+
+.bia-page-header h2 { float: left; }
+
+#bia-assessment-candidate-status{ width: 280px; }
+#bia-assessment-options { padding: 0 0 8px; }
+.bia-assessment-option { float: left; padding-left: 15px; }
+#bia-assessment-options #bia-assessment-training-class{ width: 280px; }
+#bia-assessment-options #bia-assessment-candidate-type{ width: 280px; }
+#bia-assessment-options #bia-assessment-week-number { width: 190px; }
+#bia-assessment-options #bia-assessment-type { width: 270px; }
+.bia-assessment-option label { clear: left; float: left; }
+.bia-assessment-option input, .bia-assessment-option select { float: left; margin-left: 15px; }
+.bia-assessment-option .field-validation-error { clear: left; float: left; padding-top: 5px; }
+#bia-assessment-entry-form label.error { clear: left; float: left; padding-top: 5px; }
+
+.bia-assessment-score-average { text-align: center;}
+
+#bia-assessment-entry { margin-top: 15px; }
+.bia-assessment-entry-element { float: left; margin-right: 20px; min-height: 65px; }
+.bia-assessment-entry-element input { float: left; }
+.bia-assessment-entry-element .field-validation-error { clear: left; float: left; }
+#bia-assessment-entry-actions { float: left; margin: 18px 0 0 15px; }
+
+#assessments-listing { margin-top: 15px; }
+#assessments-listing .bia-national-id { width: 150px; }
+#assessments-listing .bia-candidate-name { width: 300px; }
+#assessments-listing .bia-assessment-score { width: 120px; }
+#assessments-listing .bia-assessment-action { width: 120px; }
+#assessments-listing fieldset { padding: 1.4em; }
+#assessments-listing table thead th { cursor: pointer; }
+
+.display-label{font-style:italic}
+.display-values{font-weight:bolder}
+
+.bia-recommended-class{width: 10em;}
+.bia-facilitator-remarks{width: 15em;}
+
+.bia-hiring-option { float: left; min-height: 45px; }
+.bia-hiring-option input, .bia-hiring-option select { margin-left: 3px;margin-right: 8px; }
+
+.table-small { font-size:small;}
+
+#bia-positions-filters 
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 15px 0px 15px 0px;
+    width: 100%;
+    -moz-border-radius: 6px; 
+ } 
+ 
+#bia-positions-options { padding: 0 0 8px; }
+.bia-positions-option { float:left; padding-left: 15px; }
+#bia-positions-filters #bia-positions-target-academy{ width: 400px; }
+#bia-positions-filters #bia-positions-candidate-type{ width: 280px; }
+#bia-positions-filters #bia-positions-contract-type{ width: 400px; }
+#bia-positions-filters #bia-positions-status { width: 200px; }
+#bia-positions-filters #bia-positions-status { width: 200px; }
+.bia-positions-option label { clear: left; float: left; }
+.bia-positions-option select { float: left; margin-left: 15px; }
+#bia-position-academy-dropdown { width:280px; }
+.bia-positions-table-wrapper{ margin-top : 10px; }
+
+.bia-positions-new { padding-bottom:15px; }
+
+.dialog  
+{
+    font-size: 12px;
+    font-family: Lucida Grande, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
+}
+
+.bia-recruitment-cycle-wrapper
+{
+    margin-bottom:20px;
+}
+
+.bia-recruitment-cycle-table
+{
+    border:none;
+    width:540px;
+}
+
+.bia-recruitment-cycle-error
+{
+    color:red;
+}
+
+.bia-recruitment-cycle-table td
+{
+    border:none;
+    width:50%;
+    text-align:left;
+    padding-top: 5px; padding-bottom:10px;
+}
+
+.bia-billing-sms-job-table-wrapper
+{
+    padding-top:10px;
+}
+
+/* for the jobs grid */
+#bia-billing-sms-jobs-table
+{
+    width:100%;
+    border:0px none;
+}
+
+/* for the new-edit job view */
+#bia-billing-sms-job-table
+{
+    width:60%;
+    border:0px none;
+}
+
+#bia-billing-sms-job-table td
+{
+    border: 0px none;
+}
+
+#bia-billing-messages-filters
+{
+    border: solid 1px rgba(139,191,64,.8); 
+    border-radius: 6px; 
+    box-shadow: 2px 2px 3px rgb(139,191,64);
+    float: left;
+    padding: 10px 0px 15px 0px;
+    width: 100%;
+    -moz-border-radius: 6px; 
+ } 
+ 
+ #bia-billing-messages-filters { padding: 8px 0 8px; }
+.bia-billing-messages-filter { float:left; padding-left: 15px; }
+.bia-billing-messages-table-wrapper{ margin-top : 10px; }
+.bia-billing-messages-filter label { clear: left; float: left; margin-right:10px; }
+ #bia-billing-messages-filters .date { width:120px; }

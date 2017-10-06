@@ -1,0 +1,102 @@
+﻿@model Bridge.Web.Models.BillingSMSMessagesModel
+
+@{
+    ViewBag.Title = "Billing SMS Messages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScriptIncludes {
+   <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+}
+
+<h2 style="margin-bottom:5px;">Billing SMS Messages</h2>
+
+@using (Html.BeginForm("Index", "Billing", FormMethod.Post))
+{  
+<div id="bia-billing-messages-filters">
+    <div id="bia-billing-messages-pupil-id" class="bia-billing-messages-filter">
+        <label class="bia-billing-messages-filter">
+            Pupil ID: 
+        </label>
+        @Html.TextBox("PupilID", Model.SMSMessageFilter.PupilId)
+    </div>
+
+    <div id="bia-billing-messages-phone-number" class="bia-billing-messages-filter">
+        <label class="bia-billing-messages-filter">
+            Phone Number: 
+        </label>
+        @Html.TextBox("PhoneNumber", Model.SMSMessageFilter.PhoneNumber)        
+    </div>
+            
+    <div id="bia-billing-messages-date-start" class="bia-billing-messages-filter">
+        <label class="bia-billing-messages-filter">
+            From: 
+        </label>
+        @Html.TextBox("DateStart", Model.SMSMessageFilter.DateStart.Value.ToString("dd/MMM/yyyy"), new { @class = "date" })        
+    </div>
+
+    <div id="bia-billing-messages-date-end" class="bia-billing-messages-filter">
+        <label class="bia-billing-messages-filter">
+            To: 
+        </label>
+        @Html.TextBox("DateEnd", Model.SMSMessageFilter.DateEnd.Value.ToString("dd/MMM/yyyy"), new { @class = "date" })        
+    </div>
+
+    <div id="bia-billing-messages-search" class="bia-billing-messages-filter">
+        <input id="bia-billing-messages-search-button" type="submit" value="Search" />
+    </div>
+</div>
+}
+
+<div class="clear-float"></div>
+<div class="bia-billing-messages-table-wrapper">
+    <table id="bia-billing-messages-table" style="width:100%">
+        <thead>
+            <tr>        
+                <th>Pupil ID</th>
+                <th>Phone Number</th>
+                <th>Message Type</th>
+                <th>Date Sent</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model.SMSMessages != null)
+        {        
+            foreach (var message in Model.SMSMessages)
+            {
+                <tr>
+                    <td>@message.PupilId</td>
+                    <td>@message.PhoneNumber</td>
+                    <td>@message.MessageType</td>
+                    <td>
+                        @if(message.DateSent != DateTime.MinValue){
+                            @message.DateSent.ToString("dd-MM-yyyy hh:mm tt", System.Globalization.CultureInfo.InvariantCulture)
+                        } else{
+                            <text>&nbsp;</text>   
+                        }
+                    </td>
+                    <td>@message.Message</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#bia-billing-messages-table').dataTable({
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [4] }
+                    ]
+            });
+        });
+
+        $('.date').datepicker({ dateFormat: "d/M/yy" });
+    </script>
+}

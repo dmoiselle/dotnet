@@ -1,0 +1,146 @@
+﻿@using System.Web.Security
+
+@if (Request.IsAuthenticated)
+{
+    var currentPage = (string)ViewData["CurrentPage"] ?? "Home";
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+
+    <div class="bia-main-menu">
+        <ul>
+            <li id="bia-home-menu" @if (controllerName == "Home")
+                                   { <text>class="selected"</text> }>            
+                <a href="@Url.Action("Index", "Home")" class="bia-main-menu-item"><span>Home</span></a>
+            </li>
+           
+            @if (HttpContext.Current.User.IsInRole("TrainingManager") || HttpContext.Current.User.IsInRole("TrainingFacilitator") || HttpContext.Current.User.IsInRole("Administrator"))
+            {
+                <li id="bia-training-menu" @if (controllerName == "Training")
+                                           { <text>class="selected"</text> }>
+                    <a href="@Url.Action("Candidates", "Training")" class="bia-main-menu-item"><span>Training</span></a>
+                </li>
+            }
+            @if (HttpContext.Current.User.IsInRole("TrainingManager") || HttpContext.Current.User.IsInRole("Administrator"))
+            {
+                <li id="bia-hiring-menu" @if (controllerName == "Hiring")
+                                         { <text>class="selected"</text> }>
+                    <a href="@Url.Action("HiringDashboard", "Hiring")" class="bia-main-menu-item"><span>Hiring</span></a>
+                </li>
+            }
+            
+            @if (HttpContext.Current.User.IsInRole("IT Support") || HttpContext.Current.User.IsInRole("Helpdesk") || HttpContext.Current.User.IsInRole("Administrator"))
+            {
+                <li id="bia-billing-menu" @if (controllerName == "Billing")
+                                          { <text>class="selected"</text> }>
+                    <a href="@Url.Action("Index", "Billing")" class="bia-main-menu-item"><span>Billing</span></a>
+                </li>
+            }
+           
+            @if (HttpContext.Current.User.IsInRole("Administrator"))
+            {
+                 <li id="bia-recruitment-menu" @if (controllerName == "Administration")
+                                               { <text>class="selected"</text> }>
+                    <a href="@Url.Action("DataUtilities", "Administration")" class="bia-main-menu-item"><span>Administration</span></a>
+                 </li>
+            }
+        </ul>
+    </div>
+    
+            if (controllerName == "Home")
+            {
+                // Home submenu
+            }
+            else if (controllerName == "Training")
+            {
+                // Training submenu
+                <div class="bia-sub-menu">
+                    <ul class="bia-training-menu">
+                        <li @if (actionName == "Candidates")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Candidates", "Training")"><span>Candidates</span></a>
+                        </li>
+                        <li @if (actionName == "Assessments")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Assessments", "Training")"><span>Assessments</span></a>                
+                        </li>
+                        <li @if (actionName == "FacilitatorRecommendations")
+                            { <text>class="selected"</text> } style="width:220px">
+                            <a href="@Url.Action("FacilitatorRecommendations", "Training")"><span>Facilitator Recommendations</span></a>
+                        </li>              
+                    </ul>
+                </div>
+            }
+            else if (controllerName == "Hiring")
+            {
+                // Hiring submenu
+                <div class="bia-sub-menu">
+                    <ul class="bia-hiring-menu">
+                        <li @if (actionName == "Candidates")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Candidates", "Hiring")"><span>Candidates</span></a>
+                        </li>
+                        <li @if (actionName == "Positions")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Positions", "Hiring")"><span>Positions</span></a>                
+                        </li>
+                        <li @if (actionName == "Contracts")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Contracts", "Hiring")"><span>Contracts</span></a>
+                        </li>                            
+                        <li @if (actionName == "Letters")
+                            { <text>class="selected"</text> }>
+                            <a href="@Url.Action("Letters", "Hiring")"><span>Letters</span></a>
+                        </li>
+                                
+                    </ul>
+                </div>
+            }
+            else if (controllerName == "Billing")
+            {
+                // Billing submenu                
+                <div class="bia-sub-menu">
+                    <ul class="bia-billing-menu">
+                        @if (HttpContext.Current.User.IsInRole("IT Support") || HttpContext.Current.User.IsInRole("Helpdesk") || HttpContext.Current.User.IsInRole("Administrator"))
+                        {
+                            <li @if (actionName == "Index")
+                                { <text>class="selected"</text> }><a href="@Url.Action("Index", "Billing")"><span>Messages</span></a>
+                            </li>  
+                        }
+                        @if (HttpContext.Current.User.IsInRole("IT Support") || HttpContext.Current.User.IsInRole("Administrator"))
+                        {                                        
+                            <li @if (actionName == "BillingSMSJobs")
+                                { <text>class="selected"</text> }><a href="@Url.Action("BillingSMSJobs", "Billing")"><span>SMS Jobs</span></a> 
+                            </li>  
+                        }
+                    </ul>
+                </div>
+                 
+            }
+            else if (controllerName == "Administration")
+            {        
+                <div class="bia-sub-menu">
+                    @if (HttpContext.Current.User.IsInRole("Administrator"))
+                    {
+                        <ul class="bia-recruitment-menu">                                    
+                            <li @if (actionName == "DataUtilities")
+                                { <text>class="selected"</text> }>
+                                <a href="@Url.Action("DataUtilities", "Administration")"><span>Data Utilities</span></a>
+                            </li> 
+                            <li @if (actionName == "ViewPositions")
+                                { <text>class="selected"</text> }>
+                                <a href="@Url.Action("ViewPositions", "Administration")"><span>Positions</span></a>
+                            </li>  
+                            <li @if (actionName == "WageGrades")
+                                { <text>class="selected"</text> }>
+                                <a href="@Url.Action("WageGrades", "Administration")"><span>Wage Grades</span></a>
+                            </li>
+                            <li @if (actionName == "RecruitmentCycle")
+                                { <text>class="selected"</text> } style="width:140px">
+                                <a href="@Url.Action("RecruitmentCycle", "Administration")"><span>Recruitment Cycle</span></a>
+                            </li>                              
+                        </ul>
+                    }
+                </div>        
+            }
+
+}

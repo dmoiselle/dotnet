@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Hiring";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--
+<div class="bia-button_links">
+    @Html.ActionLink("Create Vacancies", "NewVacancies", "Hiring")
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("View Vacancies", "ViewVacancies", "Hiring")
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("Assign Candidates to Vacancies", "Candidates", "Hiring")
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("View Offers", "Offers", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("Contract Letters", "ContractLetters", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("Relocate Candidates", "RelocateCandidates", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("Contract Statuses", "ContractStatus", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("System Data Dumps", "ListDataDumpItems", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @Html.ActionLink("Wage Grades", "CloneWageGrades", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })
+</div>
+
+<div class="bia-button_links">
+    @*@Html.ActionLink("Wage Grades", "WageGrades", "Hiring", null, new { @id = "bia-enter-assessment-results-button" })*@
+</div>
+-->
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".bia-button_links a").button();
+        });
+    </script>
+}

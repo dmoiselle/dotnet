@@ -1,0 +1,136 @@
+﻿@model Bridge.Web.Models.NewPositionViewModel
+
+
+@{
+    ViewBag.Title = "New Position Specification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>   
+    
+}
+
+<div class="bia-page-header">
+    <div><h2>New Position Specification</h2></div>
+    <div id="bia-back-to-candidates" class="bia-righthand_links">
+         @Html.ActionLink("Back To Hiring", "HiringDashboard", "Hiring")
+    </div>
+    <div id="bia-back-to-candidate" class="bia-righthand_links" >
+         @Html.ActionLink("View Positions", "ViewPositions", "Administration") |
+    </div>
+    
+    <div class="clear-float"></div>
+</div>
+
+<div id="bia-positions-filters">
+    @using (Html.BeginForm("NewPositions", "Administration", FormMethod.Get, new { @id = "Vform" }))
+    {
+        <div id="bia-positions-target-academy" class="bia-positions-option">
+            <label class="bia-positions-target-academy-label" for="SchoolID">
+                Academy:
+            </label>
+            @Html.DropDownList("SchoolID", Model.School, "<Select Item>", new { @class = "autoSubmit" })
+        </div>
+        <div id="bia-positions-contract-type" class="bia-positions-option">
+            <label class="bia-positions-contract-type-label" for="ContractType">
+                Contract Type:
+            </label>
+            @Html.DropDownList("ContractType", Model.ContractType, "<Select Item>", new { @class = "autoSubmit" })
+        </div>
+    }
+</div>
+<div class="clear-float"></div>
+<br />
+@using (Html.BeginForm("CreateNewPositions", "Administration", FormMethod.Post, new { @id = "Vform2" }))
+{
+    <table id="table_id" class="display">
+        <thead>
+            <tr>
+                <td>
+                    Classification
+                </td>
+                <td>
+                    Positions
+                </td>
+                <td>
+                    Start Date
+                </td>
+                <td>
+                    End Date
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.NewPositionsSpecification)
+            { 
+                <tr>
+                    <td>
+                        @Html.Hidden("SchoolID", item.SchoolID)
+                        @Html.Hidden("ContractType", item.ClassID)
+                        @Html.Hidden("Classifications", Model.Classifications.ToList())
+                        @Html.Hidden("RecruitmentCycle", item.RecruitmentCycle)
+                        @Html.Hidden("ClassificationDisplayText", item.ClassificationDisplayText)
+                        @Html.Hidden("NoOfExistingPositions", item.RequiredPositions)
+                        @Html.Hidden("PositionTypeID", item.PositionTypeID)
+                        @Html.Hidden("CandidateType", item.CandidateType)
+                        @Html.Label(item.ClassificationDisplayText)
+                        @Html.Hidden("ClassID", item.ClassID)
+                    </td>
+                    <td>
+                        @Html.TextBox("RequiredPositions", item.RequiredPositions)
+                        @Html.ValidationMessageFor(m => item.RequiredPositions)
+                    </td>
+                    <td>
+                        @Html.TextBox("StartDate", item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MMM/yyyy") : null, new { @class = "date", @id = "StartDate" + item.ClassID })
+                        @Html.ValidationMessageFor(m => item.StartDate, "", new { @id = "StartDate" + item.ClassID + "VM" })
+                    </td>
+                    <td>
+                        <div style="display:@(item.ContractType == "FT" ? "none" : "inline")">
+                            @Html.TextBox("EndDate", item.EndDate.HasValue ? item.EndDate.Value.ToString("dd/MMM/yyyy") : null, new { @class = "date", @id = "EndDate" + item.ClassID })
+                            @Html.ValidationMessageFor(m => item.EndDate)
+                        </div>
+                    </td>
+                </tr>    
+            }
+                <tr>
+                    <td colspan="4" align="right">
+                        @if (Model.NewPositionsSpecification.Count() > 0)
+                        {
+                            <input type="submit" value="Create" />
+                        }
+                    </td>
+                </tr>
+        </tbody>
+    </table>       
+}
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+     $(".autoSubmit").change(function () {
+  $(this).closest("form")[0].submit();
+});
+
+});
+
+//$(document).ready(function () {
+//    $('#table_id').dataTable({
+//        // "sDom": '<"top"i>rt<"bottom"flp><"clear">'
+//    });
+//});
+</script>
+
+<script src="../../Scripts/jquery-1.7.1.js" type="text/javascript"></script>
+<script src="../../Scripts/jquery-ui-1.8.17.min.js" type="text/javascript"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+    $(document).ready(function () {
+        $('.date').datepicker({ dateFormat: "d/M/yy", minDate: +0 });
+    }); 
+
+</script>

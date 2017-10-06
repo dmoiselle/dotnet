@@ -1,0 +1,401 @@
+﻿@model HiringDashboardModel
+@using Bridge.Domain.Recruiting
+@using Bridge.Web.Models
+@{
+    ViewBag.Title = "Hiring Dashboard";
+}
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+}
+
+
+<br />
+<fieldset>
+    <legend>Positions </legend>
+    <table class="hiring-dashboard-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="left">
+                <h4>
+                    Teacher Positions</h4>
+                <b>
+                    @if(Model.TeacherPositionsStat.Total == 0) {
+                        @Model.TeacherPositionsStat.Total.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherPositionsStat.Total.ToString(), "Positions", new { CandidateType = "Teacher" })
+                    }</b> positions,                        
+                <b>
+                    @if(Model.TeacherPositionsStat.Filled == 0) {
+                        @Model.TeacherPositionsStat.Filled.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherPositionsStat.Filled.ToString(), "Positions", new { PositionStatus = Position.POSITION_STATUS_FILLED, CandidateType = "Teacher" })
+                    }</b> filled, 
+                <b>
+                    @if (Model.TeacherPositionsStat.Open == 0)
+                    {
+                        @Model.TeacherPositionsStat.Open.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherPositionsStat.Open.ToString(), "Positions", new { PositionStatus = Position.POSITION_STATUS_OPEN, CandidateType = "Teacher" })
+                    }</b> open
+            </td>
+            <td class="right">
+                <h4>
+                    Academy Manager Positions</h4>
+                <b>
+                    @if(Model.AMPositionsStat.Total == 0) {
+                        @Model.AMPositionsStat.Total.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMPositionsStat.Total.ToString(), "Positions", new { CandidateType = "AcademyManager" })
+                    }</b> positions,                        
+                <b>
+                    @if(Model.AMPositionsStat.Filled == 0) {
+                        @Model.AMPositionsStat.Filled.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMPositionsStat.Filled.ToString(), "Positions", new { PositionStatus = Position.POSITION_STATUS_FILLED, CandidateType = "AcademyManager" })
+                    }</b> filled, 
+                <b>
+                    @if (Model.AMPositionsStat.Open == 0)
+                    {
+                        @Model.AMPositionsStat.Open.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMPositionsStat.Open.ToString(), "Positions", new { PositionStatus = Position.POSITION_STATUS_OPEN, CandidateType = "AcademyManager" })
+                    }</b> open
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<br />
+<fieldset>
+    <legend>Candidates' Star Rating </legend>
+    <table class="hiring-dashboard-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="left">
+                <h4>
+                    Teacher Candidates</h4>
+                <b>
+                    @if(Model.TeacherCandidatesStat.Total == 0){
+                        @Model.TeacherCandidatesStat.Total.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherCandidatesStat.Total.ToString(), "Candidates", new { candidateType = CandidateType.Teacher })
+                    }</b> candidates,
+                <b>
+                    @if(Model.TeacherCandidatesStat.Assigned == 0) {
+                        @Model.TeacherCandidatesStat.Assigned.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherCandidatesStat.Assigned.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, hiringStatus = "Assigned" })
+                    }</b> assigned, 
+                <b>
+                    @if(Model.TeacherCandidatesStat.Available == 0) {
+                        @Model.TeacherCandidatesStat.Available.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherCandidatesStat.Available.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, hiringStatus = "Available" })
+                    }</b> available,                 
+                <b>
+                    @if(Model.TeacherCandidatesStat.Backup == 0) {
+                        @Model.TeacherCandidatesStat.Backup.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherCandidatesStat.Backup.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, hiringStatus = "Backup" })
+                    }</b> backup,
+                <b>
+                    @if(Model.TeacherCandidatesStat.Rejected == 0) {
+                        @Model.TeacherCandidatesStat.Rejected.ToString()
+                    } else {
+                        @Html.ActionLink(Model.TeacherCandidatesStat.Rejected.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, hiringStatus = "Rejected" })
+                    }</b> rejected
+                <div class="rating">
+                    <table width="90%">
+                        @foreach (var rating in Model.TeacherCandidatesRatingStat)
+                        { 
+                            <tr>
+                                    <td class="total">
+                                        <b>
+                                            @if (Model.TeacherCandidatesRatingStat[rating.Key].Total == 0)
+                                            {
+                                                @Model.TeacherCandidatesRatingStat[rating.Key].Total.ToString()
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(Model.TeacherCandidatesRatingStat[rating.Key].Total.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()) })
+                                            }
+                                        </b>
+                                    </td>
+                                    @if (rating.Key == -1)
+                                    {
+                                        <td class="description">
+                                            <b>unrated</b> candidates,
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="description">
+                                            <b>@rating.Key.ToString() star</b> candidates,
+                                        </td>
+                                    }
+                                    <td class="assigned">
+                                        <b>
+                                            @if (Model.TeacherCandidatesRatingStat[rating.Key].Assigned == 0)
+                                            {
+                                                @Model.TeacherCandidatesRatingStat[rating.Key].Assigned.ToString()
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(Model.TeacherCandidatesRatingStat[rating.Key].Assigned.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Assigned" })
+                                            }
+                                        </b>assigned,
+                                    </td>
+                                    <td class="available">
+                                        <b>
+                                            @if (Model.TeacherCandidatesRatingStat[rating.Key].Available == 0)
+                                            {
+                                                @Model.TeacherCandidatesRatingStat[rating.Key].Available.ToString()
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(Model.TeacherCandidatesRatingStat[rating.Key].Available.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Available" })
+                                            }
+                                        </b>available,
+                                    </td>
+                                <td class="backup">
+                                    <b>
+                                        @if (Model.TeacherCandidatesRatingStat[rating.Key].Backup == 0)
+                                        {
+                                            @Model.TeacherCandidatesRatingStat[rating.Key].Backup.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.TeacherCandidatesRatingStat[rating.Key].Backup.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Backup" })
+                                        }
+                                    </b>backup,
+                                </td>
+                                <td class="rejected">
+                                    <b>
+                                        @if (Model.TeacherCandidatesRatingStat[rating.Key].Rejected == 0)
+                                        {
+                                            @Model.TeacherCandidatesRatingStat[rating.Key].Rejected.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.TeacherCandidatesRatingStat[rating.Key].Rejected.ToString(), "Candidates", new { candidateType = CandidateType.Teacher, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Rejected" })
+                                        }
+                                    </b>rejected
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </td>
+            <td class="right">
+                <h4>
+                   
+                    Academy Manager Candidates</h4> 
+                <b>
+                    @if(Model.AMCandidatesStat.Total == 0){
+                        @Model.AMCandidatesStat.Total.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMCandidatesStat.Total.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager })
+                    }</b> candidates,
+                <b>
+                    @if(Model.AMCandidatesStat.Assigned == 0) {
+                        @Model.AMCandidatesStat.Assigned.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMCandidatesStat.Assigned.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, hiringStatus = "Assigned" })
+                    }</b> assigned, 
+                <b>
+                    @if(Model.AMCandidatesStat.Available == 0) {
+                        @Model.AMCandidatesStat.Available.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMCandidatesStat.Available.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, hiringStatus = "Available" })
+                    }</b> available,                 
+                <b>
+                    @if(Model.AMCandidatesStat.Backup == 0) {
+                        @Model.AMCandidatesStat.Backup.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMCandidatesStat.Backup.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, hiringStatus = "Backup" })
+                    }</b> backup,
+                <b>
+                    @if(Model.AMCandidatesStat.Rejected == 0) {
+                        @Model.AMCandidatesStat.Rejected.ToString()
+                    } else {
+                        @Html.ActionLink(Model.AMCandidatesStat.Rejected.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, hiringStatus = "Rejected" })
+                    }</b> rejected
+                <div class="rating">
+                    <table width="90%">
+                        @foreach (var rating in Model.AMCandidatesRatingStat)
+                        { 
+                            <tr>
+                                <td class="total">
+                                    <b>
+                                        @if (Model.AMCandidatesRatingStat[rating.Key].Total == 0)
+                                        {
+                                            @Model.AMCandidatesRatingStat[rating.Key].Total.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.AMCandidatesRatingStat[rating.Key].Total.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()) })
+                                        }
+                                    </b>
+                                </td>
+                                @if (rating.Key == -1)
+                                {
+                                    <td class="description">
+                                        <b>unrated</b> candidates,
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="description">
+                                        <b>@rating.Key.ToString() star</b> candidates,
+                                    </td>
+                                }
+                                <td class="assigned">
+                                    <b>
+                                        @if (Model.AMCandidatesRatingStat[rating.Key].Assigned == 0)
+                                        {
+                                            @Model.AMCandidatesRatingStat[rating.Key].Assigned.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.AMCandidatesRatingStat[rating.Key].Assigned.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Assigned" })
+                                        }
+                                    </b>assigned,
+                                </td>
+                                <td class="available">
+                                    <b>
+                                        @if (Model.AMCandidatesRatingStat[rating.Key].Available == 0)
+                                        {
+                                            @Model.AMCandidatesRatingStat[rating.Key].Available.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.AMCandidatesRatingStat[rating.Key].Available.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Available" })
+                                        }
+                                    </b>available,
+                                </td>
+                                <td class="backup">
+                                    <b>
+                                        @if (Model.AMCandidatesRatingStat[rating.Key].Backup == 0)
+                                        {
+                                            @Model.AMCandidatesRatingStat[rating.Key].Backup.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.AMCandidatesRatingStat[rating.Key].Backup.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Backup" })
+                                        }
+                                    </b>backup,
+                                </td>
+                                <td class="rejected">
+                                    <b>
+                                        @if (Model.AMCandidatesRatingStat[rating.Key].Rejected == 0)
+                                        {
+                                            @Model.AMCandidatesRatingStat[rating.Key].Rejected.ToString()
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.AMCandidatesRatingStat[rating.Key].Rejected.ToString(), "Candidates", new { candidateType = CandidateType.AcademyManager, starRating = (rating.Key == -1 ? "" : rating.Key.ToString()), HiringStatus = "Rejected" })
+                                        }
+                                    </b>rejected
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<br />
+<fieldset>
+    <legend>Contracts </legend>
+    <table class="hiring-dashboard-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="left">
+                <h4>
+                    Teacher Contracts</h4>
+                @foreach (var contractType in Model.TeacherContractsStat)
+                {
+                    <b>
+                        @Html.ActionLink(contractType.Value.Total.ToString(), "Contracts", new { acceptanceStatus = "", contractType = "", candidateType = CandidateType.Teacher })
+                        @contractType.Key </b><text>contracts</text>
+                        <p>
+                            <b>
+                                @contractType.Value.Offered.ToString()
+                            </b>offered,
+                            <b>
+                                @contractType.Value.Accepted.ToString()
+                            </b>accepted,
+                            <b>
+                                @contractType.Value.Declined.ToString()
+                            </b>declined.
+                        </p>
+                }
+
+            </td>
+            <td class="right">
+                <h4>
+                    Academy Manager Contracts</h4>
+                    @foreach (var contractType in Model.AMContractsStat)
+                    {
+                        <b>
+                            @Html.ActionLink(contractType.Value.Total.ToString(), "Contracts", new { acceptanceStatus = "", contractType = "", candidateType = CandidateType.AcademyManager })
+                            @contractType.Key </b><text>contracts</text>
+                        <p>
+                            <b>
+                                @contractType.Value.Offered.ToString()
+                            </b>offered,
+                            <b>
+                                @contractType.Value.Accepted.ToString()
+                            </b>accepted,
+                            <b>
+                                @contractType.Value.Declined.ToString()
+                            </b>declined.
+                        </p>
+                    }
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<br />
+<fieldset>
+    <legend>Letters </legend>
+    <table class="hiring-dashboard-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="left">
+                <h4>
+                    Teacher Letters</h4>
+                <b>
+                    @Html.ActionLink((Model.TeacherCandidatesStat.Backup + Model.TeacherCandidatesStat.Rejected + Model.TeacherCandidatesStat.Relocated).ToString(), "Letters", new { candidateType = "Teacher" })
+                </b> letters
+                <p> 
+                   <b>@Model.TeacherCandidatesStat.Backup.ToString()</b> backup, 
+                   <b>@Model.TeacherCandidatesStat.Rejected.ToString()</b> rejected,
+                   <b>@Model.TeacherCandidatesStat.Relocated.ToString()</b> relocated
+                </p>  
+            </td>
+            <td class="right">
+                <h4>
+                    Academy Manager Letters</h4>
+                <b>
+                    @Html.ActionLink((Model.AMCandidatesStat.Backup + Model.AMCandidatesStat.Rejected + Model.AMCandidatesStat.Relocated).ToString(), "Letters", new { candidateType = "AcademyManager" })
+                </b> letters
+                <p>
+                        <b>@Model.AMCandidatesStat.Backup.ToString()</b> backup, 
+                        <b>@Model.AMCandidatesStat.Rejected.ToString()</b> rejected,
+                        <b>@Model.AMCandidatesStat.Relocated.ToString()</b> relocated
+                </p>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<br />
+<script type="text/javascript" charset="utf-8">
+
+    $(".autoSubmit").change(function () {
+        $(this).closest("form")[0].submit();
+    });
+
+
+    $(document).ready(function () {
+        $('#table_id').dataTable({
+            // "sDom": '<"top"i>rt<"bottom"flp><"clear">'
+        });
+    });
+</script>

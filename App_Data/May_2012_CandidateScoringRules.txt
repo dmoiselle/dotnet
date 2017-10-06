@@ -1,0 +1,343 @@
+﻿{
+    "CandidateTypeRules": [
+        {
+            "CandidateType": "Teacher",
+            "Weeks": [
+                {
+                    "WeekNumber": 1,
+                    "Rules": [
+                        {
+                            "Type": "PreTraining",
+                            "Weighting": "0",
+                            "MaximumScore": "25"
+                        },
+                        {
+                            "Type": "Content",
+                            "Weighting": "1",
+                            "MaximumScore": "35"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 2,
+                    "Rules": [
+                        {
+                            "Type": "Content",
+                            "Weighting": ".125",
+                            "MaximumScore": "35"
+                        },
+                        {
+                            "Type": "Tools",
+                            "Weighting": ".125",
+                            "MaximumScore": "20"
+                        },
+                        {
+                            "Type": "Scenario",
+                            "Weighting": ".125",
+                            "MaximumScore": "23"
+                        },
+                        {
+                            "Type": "Pronunciation",
+                            "Weighting": ".125",
+                            "MaximumScore": "22"
+                        },
+                        {
+                            "Type": "DI",
+                            "Weighting": ".5",
+                            "MaximumScore": "24"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 3,
+                    "Rules": [
+                        {
+                            "Type": "Content",
+                            "Weighting": ".125",
+                            "MaximumScore": "35"
+                        },
+                        {
+                            "Type": "Tools",
+                            "Weighting": ".125",
+                            "MaximumScore": "25"
+                        },
+                        {
+                            "Type": "Scenario",
+                            "Weighting": ".125",
+                            "MaximumScore": "20"
+                        },
+                        {
+                            "Type": "Pronunciation",
+                            "Weighting": ".125",
+                            "MaximumScore": "22"
+                        },
+                        {
+                            "Type": "DI",
+                            "Weighting": ".50",
+                            "MaximumScore": "24"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 4,
+                    "Rules": [
+                        {
+                            "Type": "Content",
+                            "Weighting": ".125",
+                            "MaximumScore": "20"
+                        },
+                        {
+                            "Type": "Tools",
+                            "Weighting": ".125",
+                            "MaximumScore": "20"
+                        },
+                        {
+                            "Type": "Scenario",
+                            "Weighting": ".125",
+                            "MaximumScore": "10"
+                        },
+                        {
+                            "Type": "Pronunciation",
+                            "Weighting": ".125",
+                            "MaximumScore": "22"
+                        },
+                        {
+                            "Type": "DI",
+                            "Weighting": ".50",
+                            "MaximumScore": "24"
+                        }
+                    ]
+                }
+            ],
+            "SummaryRules": {
+                "Rules": [
+                    {
+                        "Type": "Content",
+                        "Weighting": ".125",
+                        "Order": "3"
+                    },
+                    {
+                        "Type": "Tools",
+                        "Weighting": ".125",
+                        "Order": "4"
+                    },
+                    {
+                        "Type": "Scenario",
+                        "Weighting": ".125",
+                        "Order": "5"
+                    },
+                    {
+                        "Type": "Pronunciation",
+                        "Weighting": ".125",
+                        "Order": "2"
+                    },
+                    {
+                        "Type": "DI",
+                        "Weighting": ".5",
+                        "Order": "1"
+                    }
+                ],
+                "StarGrades": [
+                    {
+                        "MinimumScore": ".9",
+                        "Star": "5"
+                    },
+                    {
+                        "MinimumScore": ".8",
+                        "Star": "4"
+                    },
+                    {
+                        "MinimumScore": ".7",
+                        "Star": "3"
+                    },
+                    {
+                        "MinimumScore": ".6",
+                        "Star": "2"
+                    },
+                    {
+                        "MinimumScore": ".5",
+                        "Star": "1"
+                    },
+                    {
+                        "MinimumScore": "0",
+                        "Star": "0"
+                    }
+                ]
+            },
+            "RecruitmentRules": {
+                "Rules": [
+                    {
+                        "Type": "Math",
+                        "Weighting": ".5",
+                        "MaximumScore": "15",
+                        "Order": "1"
+                    },
+                    {
+                        "Type": "Reading",
+                        "Weighting": ".5",
+                        "MaximumScore": "3",
+                        "Order": "2"
+                    }
+                ]
+            }
+        },
+        {
+            "CandidateType": "AcademyManager",
+            "Weeks": [
+                {
+                    "WeekNumber": 1,
+                    "Rules": [
+                        {
+                            "Type": "PreTraining",
+                            "Weighting": "0",
+                            "MaximumScore": "25"
+                        },
+                        {
+                            "Type": "Written",
+                            "Weighting": "1",
+                            "MaximumScore": "35"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 2,
+                    "Rules": [
+                        {
+                            "Type": "Written",
+                            "TypeNumber": 1,
+                            "Weighting": ".165",
+                            "MaximumScore": "35"
+                        },
+                        {
+                            "Type": "Written",
+                            "TypeNumber": 2,
+                            "Weighting": ".165",
+                            "MaximumScore": "35"
+                        },
+                        {
+                            "Type": "Marketing",
+                            "TypeNumber": 1,
+                            "Weighting": ".165",
+                            "MaximumScore": "21"
+                        },
+                        {
+                            "Type": "Marketing",
+                            "TypeNumber": 2,
+                            "Weighting": ".165",
+                            "MaximumScore": "21"
+                        },
+                        {
+                            "Type": "SmartPhone",
+                            "TypeNumber": 1,
+                            "Weighting": ".17",
+                            "MaximumScore": "30"
+                        },
+                        {
+                            "Type": "SmartPhone",
+                            "TypeNumber": 2,
+                            "Weighting": ".17",
+                            "MaximumScore": "30"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 3,
+                    "Rules": [
+                        {
+                            "Type": "Written",
+                            "TypeNumber": 4,
+                            "Weighting": ".33",
+                            "MaximumScore": "35"
+                        },
+                        {
+                            "Type": "SmartPhone",
+                            "TypeNumber": 3,
+                            "Weighting": ".33",
+                            "MaximumScore": "30"
+                        },
+                        {
+                            "Type": "Marketing",
+                            "TypeNumber": 3,
+                            "Weighting": ".34",
+                            "MaximumScore": "30"
+                        }
+                    ]
+                },
+                {
+                    "WeekNumber": 4,
+                    "Rules": [
+                        {
+                            "Type": "Written",
+                            "TypeNumber": 1,
+                            "Weighting": ".25",
+                            "MaximumScore": "30"
+                        },
+                        {
+                            "Type": "Written",
+                            "TypeNumber": 2,
+                            "Weighting": ".25",
+                            "MaximumScore": "30"
+                        },
+                        {
+                            "Type": "SmartPhone",
+                            "TypeNumber": 4,
+                            "Weighting": ".25",
+                            "MaximumScore": "25"
+                        },
+                        {
+                            "Type": "SmartPhone",
+                            "TypeNumber": 5,
+                            "Weighting": ".25",
+                            "MaximumScore": "25"
+                        }
+                    ]
+                }
+            ],
+            "SummaryRules": {
+                "Rules": [
+                    {
+                        "Type": "Written",
+                        "Weighting": ".33",
+                        "Order": "1"
+                    },
+                    {
+                        "Type": "SmartPhone",
+                        "Weighting": ".33",
+                        "Order": "2"
+                    },
+                    {
+                        "Type": "Marketing",
+                        "Weighting": ".34",
+                        "Order": "3"
+                    }
+                ],
+                "StarGrades": [
+                    {
+                        "MinimumScore": ".9",
+                        "Star": "5"
+                    },
+                    {
+                        "MinimumScore": ".8",
+                        "Star": "4"
+                    },
+                    {
+                        "MinimumScore": ".7",
+                        "Star": "3"
+                    },
+                    {
+                        "MinimumScore": ".6",
+                        "Star": "2"
+                    },
+                    {
+                        "MinimumScore": ".5",
+                        "Star": "1"
+                    },
+                    {
+                        "MinimumScore": "0",
+                        "Star": "0"
+                    }
+                ]
+            }
+        }
+    ]
+}

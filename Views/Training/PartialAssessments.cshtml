@@ -1,0 +1,31 @@
+﻿@model AssessmentsModel
+
+<div id="assessments-listing">
+    <table id="bia-assessment-table" class="display" width="100%">
+            <thead>
+                <tr>
+                    <th style="width:25%">National ID</th>
+                    <th>Name</th>                    
+                    <th style="width:25%">Score</th>                    
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.CandidateAssessments != null && Model.CandidateAssessments.Any())
+                {
+                    foreach (var item in Model.CandidateAssessments.OrderByDescending(c => c.AssessmentID))
+                    {                                              
+                       <tr>
+                            <td>
+                                @item.NationalID                                  
+                            </td>
+                            <td>@item.Name 
+                                <input type="hidden" id="@item.NationalID" value="@item.CandidateID"/> 
+                                <input type="hidden" id="@item.CandidateID" value="@item.AssessmentID"/>
+                            </td>                                                    
+                            <td class="bia-assessment-score" candidateid="@item.CandidateID" assessmentid="@item.AssessmentID" score="@if(item.Score != null){<text>@item.Score</text>}" >@if(item.Score!=null){<text>@item.Score</text>}else{<text>Double-click to edit</text>}</td>                            
+                        </tr>
+                    }
+                }                
+            </tbody>
+        </table>
+</div> 

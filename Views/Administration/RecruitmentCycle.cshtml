@@ -1,0 +1,196 @@
+﻿@model Bridge.Web.Models.RecruitmentCyclesModel
+@{
+    ViewBag.Title = "Recruitment Cycle";
+}
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/fileuploader.js")" type="text/javascript"></script>
+    <link href="../../Content/fileuploader.css" rel="stylesheet" type="text/css" />
+}
+<h2>
+    Recruitment Cycle</h2>
+<div class="bia-recruitment-cycle-wrapper">
+    <h4>
+        Current</h4>
+    <table class="bia-recruitment-cycle-table" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>
+                <label for="lblCurrentRecruitmentCycle">
+                    Recruitment Cycle:
+                </label>
+            </td>
+            <td>
+                <label id="lblCurrentRecruitmentCycle" class="bia-recruitment-cycle-label">@Model.CurrentRecruitmentCycle.RecruitmentCycle</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="lblCurrentDateActivated">
+                    Date Activated:
+                </label>
+            </td>
+            <td>@Html.DisplayFor(dateActivated => Model.CurrentRecruitmentCycle.DateActivated, "lblCurrentDateActivated")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="lblCurrentRulesFile">
+                    Recruitment Rules File:
+                </label>
+            </td>
+            <td>
+                <label id="lblCurrentRulesFile">@Model.CurrentRecruitmentCycle.RulesFile</label>
+            </td>
+        </tr>
+    </table>
+</div>
+@if (Model.NextRecruitmentCycle != null)
+{
+    <div class="bia-recruitment-cycle-wrapper">
+        <h4>
+            Next</h4>
+        <table class="bia-recruitment-cycle-table" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <label>
+                        Recruitment Cycle:
+                    </label>
+                </td>
+                <td>
+                    <label id='nextRecruitmentCycle'>@Model.NextRecruitmentCycle.RecruitmentCycle</label>
+                    <input type="button" id="bia-recruitment-cycle-activate" value="Activate" style="@if (!Model.NextRecruitmentCycle.RulesFileUploaded)
+                                                                                                     { <text>display:none</text>}" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Recruitment Rules File:
+                </td>
+                <td id="bia-next-rule-file-parent">
+                    @if (Model.NextRecruitmentCycle.RulesFileUploaded)
+                    {
+                        <a href="#" id="bia-recruitment-rule-file">@Model.NextRecruitmentCycle.RulesFile</a> 
+                    }
+                    else
+                    {  
+                        <text>&nbsp;</text>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="rulesFile">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <a href="#" id="bia-next-recruitment-cycle">Set Up Next Recruitment Cycle</a>
+}
+<div style="display: none">
+    <div id="bia-recruitment-cycle" class="dialog">
+        <table border="0" cellpadding="0" cellspacing="0" style="border-style: none;" width="100%">
+            <tr>
+                <td colspan='2' id='bia-next-recruitment-cycle-error' style='border: 0px; display: none;
+                    color: #ff0000'>
+                    You must specify a recruitment cycle
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 0px;">
+                    Next Recruitment Cycle:
+                </td>
+                <td style="border: 0px;">
+                    <input type='text' id='newRecruitmentCycle' />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    function createRulesUploader(nextRecruitmentCycle) {
+        var rulesUploader = new qq.FileUploader({
+            element: document.getElementById('rulesFile'),
+            allowedExtensions: ['txt'],
+            action: '/Administration/RecruitmentCycle',
+            multiple: false,
+            params: { "nextRecruitmentCycle": nextRecruitmentCycle },
+            template: '<div class="qq-uploader">' +
+                        '<div class="qq-upload-drop-area"><span></span></div>' +
+                        '<div class="qq-upload-button">Upload scoring rules file</div>' +
+                        '<ul class="qq-upload-list"></ul>' +
+                        '</div>',
+            onComplete: function (id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    $(".qq-upload-list").html("<li class='qq-upload-success' style='list-style-type:none'><span class='qq-upload-file'>File uploaded successfully. Saved as: " + responseJSON.fileName + "</span></li>");
+                    $("#bia-next-rule-file-parent").html("<a href='#' id='bia-recruitment-rule-file'>" + responseJSON.fileName + "</a>");
+                    $("#bia-recruitment-rule-file").unbind('click').bind('click', function () {
+                        window.location = "/Administration/ScoringRuleFile?recruitmentCycle=" + nextRecruitmentCycle;
+                    });
+                    $("#bia-recruitment-cycle-activate").show();
+                } else {
+                    $(".qq-upload-list").html("<li class='qq-upload-success' style='list-style-type:none'><span class='qq-upload-file'>File upload failed: " + responseJSON.errorMessage + "</span></li>");
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#bia-next-recruitment-cycle").unbind('click').bind('click', function () {
+            $("#bia-recruitment-cycle").dialog({
+                title: "Next Recruitment Cycle",
+                resizable: "false",
+                modal: true,
+                width: "420",
+                buttons: {
+                    OK: function () { // onOK callback
+                        var recruitmentCycle = $("#newRecruitmentCycle").val();
+                        if (!(recruitmentCycle)) {
+                            $("#bia-next-recruitment-cycle-error").show();
+                        } else {
+                            $.post("/Administration/NextRecruitmentCycle/?recruitmentCycle=" + recruitmentCycle, function (result) {
+                                if (result == recruitmentCycle) {
+                                    window.location = "/Administration/RecruitmentCycle"
+                                } else {
+                                    bia_show_dialog("Error", result);
+                                }
+                            });
+                        }
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+
+        var nextRecruitmentCycle = $("#nextRecruitmentCycle").text();
+
+        $("#bia-recruitment-rule-file").unbind('click').bind('click', function () {
+            window.location = "/Administration/ScoringRuleFile?recruitmentCycle=" + nextRecruitmentCycle;
+        });
+
+        $("#bia-recruitment-cycle-activate").unbind("click").bind("click", function () {
+
+            bia_show_confirmation_dialog("Activate next recruitment cycle",
+                "Are you sure you want to activate the next recruitment cycle?",
+                function () {
+                    $.post("/Administration/ActivateRecruitmentCycle/?recruitmentCycle=" + nextRecruitmentCycle, function (result) {
+                        if (result == nextRecruitmentCycle) {
+                            window.location = "/Administration/RecruitmentCycle"
+                        } else {
+                            bia_show_dialog("Error", result);
+                        }
+                    });
+                }
+
+            );
+
+        });
+
+        createRulesUploader(nextRecruitmentCycle);
+
+    });
+</script>

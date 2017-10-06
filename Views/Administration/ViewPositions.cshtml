@@ -1,0 +1,154 @@
+﻿@model Bridge.Web.Models.PositionsViewModel
+@{
+    ViewBag.Title = "Existing Positions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>
+    Existing Positions</h2>
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+}
+<div id="bia-positions-filters">
+    @using (Html.BeginForm("ViewPositions", "Administration", FormMethod.Get, new { @id = "Vform" }))
+    {
+        <div id="bia-positions-target-academy" class="bia-positions-option">
+            <label class="bia-positions-target-academy-label" for="SchoolID">
+                Academy:
+            </label>
+            @Html.DropDownList("SchoolID", Model.School, "All", new { @class = "autoSubmit" })
+        </div>
+        <div id="bia-positions-contract-type" class="bia-positions-option">
+            <label class="bia-positions-contract-type-label" for="ContractType">
+                Contract Type:
+            </label>
+            @Html.DropDownList("ContractType", Model.ContractType, "All", new { @class = "autoSubmit" })
+        </div>
+        <div id="bia-positions-status" class="bia-positions-option">
+            <label class="bia-positions-status-label" for="AssignmentStatus">
+                Status:
+            </label>
+            @Html.DropDownList("AssignmentStatus", new List<SelectListItem>{
+                        new SelectListItem{Text  = "Assigned" , Value = bool.TrueString},
+                        new SelectListItem{Text  = "UnAssigned" , Value = bool.FalseString},
+                    }, "All", new { @class = "autoSubmit" })
+        </div>
+    }
+</div>
+<div class="clear-float"></div>
+@Html.ValidationSummary()
+<div class="bia-positions-new">
+    @if (Model.PositionViewModel.Any())
+    {
+        @Html.ActionLink("Create New Set...", "NewPositions", new { SchoolID = Model.PositionViewModel.FirstOrDefault().SchoolID, ContractType = Model.PositionViewModel.FirstOrDefault().ContractType })
+    }
+    else
+    { 
+        @Html.ActionLink("Create New Set...", "NewPositions")
+    }
+</div>
+@using (Html.BeginForm("DeletePositions", "Administration", FormMethod.Post, new { name = "PositionsList" }))
+{
+    <table id="table_id" class="table-small" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Serial Number
+                </th>
+                <th>
+                    Academy
+                </th>
+                <th>
+                    National ID
+                </th>
+                <th>
+                    Classification
+                </th>
+                <th>
+                    Display Text
+                </th>
+                <th>
+                    Recruitment Cycle
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    End Date
+                </th>
+                <th>
+                    Contract Type
+                </th>
+                <th>
+                    Candidate Type
+                </th>
+                <th>
+                    Select
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PositionViewModel)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SerialNumber)
+                        @Html.Hidden("schoolID", item.SchoolID)
+                        @Html.Hidden("contractType", item.ContractType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SchoolID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NationalID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Classification)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClassificationDisplayText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RecruitmentCycle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContractType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CandidateType)
+                    </td>
+                    <td>
+                        @Html.CheckBox("ToDelete", false, new { value = item.SerialNumber })
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="11">
+                    <input style="width: 60px; float: right;" type="submit" value="Delete" />
+                </th>
+            </tr>
+        </tfoot>
+    </table>    
+}
+<script type="text/javascript" charset="utf-8">
+
+    $(".autoSubmit").change(function () {
+        $(this).closest("form")[0].submit();
+    });
+
+
+    $(document).ready(function () {
+        $('#table_id').dataTable({
+            "bJQueryUI": true,
+            bDestroy: true,
+            "sPaginationType": "full_numbers"
+        });
+    });
+</script>

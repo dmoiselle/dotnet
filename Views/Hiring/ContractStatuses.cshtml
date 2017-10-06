@@ -1,0 +1,228 @@
+﻿@using Bridge.Web.Models
+@model CandidatesContractStatusModel
+@{
+    ViewBag.Title = "CandidateContractStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>   
+   <script src="@Url.Content( "~/Scripts/jquery.jeditable.js" )" type="text/javascript"></script>
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.editable.js" )" type="text/javascript"></script>
+}
+
+<div id="bia-hiring-filters">
+    <fieldset>
+        <legend>Pick Contract Status Options</legend>
+        <div id="bia-hiring-target-school" class="bia-hiring-academy">
+            <label for="bia-academy-dropdown" class="bia-hiring-academy-label">
+                Academy</label>
+                @Html.DropDownList("academy", Model.TargetSchools,"All",  new { id = "bia-academy-dropdown"})
+            <div class="clear-float">
+            </div>
+        </div>
+        <div id="bia-hiring-candidate-type" class="bia-hiring-academy">
+            <label for="bia-academy-dropdown" class="bia-hiring-academy-label">Candidate Type</label>
+                @Html.DropDownList("candidateType", Model.CandidateTypes, "All", new { id = "bia-candidate-type-dropdown" })
+            <div class="clear-float">
+            </div>
+        </div>
+        <div class="clear-float">
+        </div>
+    </fieldset>
+</div>
+<div class="bia-righthand_links">
+    <p>
+    </p>
+</div>
+<div class="clear-float">
+</div>
+<div class="bia-candidate-results-table">
+    <table id ="bia-contract-status-table" class="display">
+        <thead>
+            <tr>
+                <th>
+                    National ID
+                </th>
+                <th>
+                    Candidate Name
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Vacancy Serial Number
+                </th>
+                <th>
+                    Candidate Type
+                </th>
+                <th>
+                    Contract
+                    <br />
+                    Status
+                </th>
+                <th>
+                    Comments
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var candidate in Model.Candidates)
+            {
+
+               <tr>
+                    <td >
+                        
+                            @candidate.NationalID
+                            @Html.Hidden("NationalID_" + candidate.NationalID, candidate.NationalID, new {@class = "bia-national-id" })
+                                              
+                    </td>
+                    <td>
+                        @candidate.FullName
+                    </td>
+                    <td>
+                        @candidate.Location
+                    </td>
+                    <td>
+                      
+                        @candidate.SerialNumber
+                        @Html.Hidden("SerialNumber_" + candidate.NationalID, candidate.SerialNumber, new {@class = "bia-serial-number" })
+                                           
+                    </td>
+                    <td>
+                         @candidate.CandidateType
+                    </td>
+                    <td>
+                        <div id="bia-contract-status-text-@candidate.NationalID" class="bia-contract-status-text">
+                            @candidate.Status 
+                        </div>
+                        
+                        <div id="bia-contract-status-dropdown-@candidate.NationalID" class="bia-contract-status-dropdown">
+                        
+                            @*@Html.DropDownList("contractStatuses", candidate.ContractStatuses, new { id = "bia-contract-statuses-" + candidate.NationalID, @class = "bia-contract-statuses" })*@
+                        </div>
+                        
+                    </td>
+                    <td id="bia-comment-text-@candidate.NationalID"  >
+                        @*<div id="bia-comment-textbox-@candidate.NationalID" class="bia-comment-textbox">
+                            @Html.TextBox("Comment",candidate.Comments, new { @class="bia-comment"})  
+                            
+                        </div>*@
+                        @candidate.Comments                       
+                        
+                                       
+                    </td>
+                    <td>
+                      @if(candidate.Status.ToString() != "Rejected")
+                      {                        
+                        <input type="submit" value="Edit" id="bia-edit-contract-status-@candidate.NationalID" class="bia-edit-contract-status-button" /> 
+                        <input type="submit" value="Update" id="bia-update-contract-status-@candidate.NationalID" class="bia-update-contract-status-button" />
+                      }
+                    </td>
+                </tr>          
+               
+            }
+        </tbody>
+    </table>
+    
+</div>
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var contractstatusgui = new bia_candidates_contract_status();
+            contractstatusgui.Initialize();
+
+            InitializeTable();
+
+        });
+
+        function InitializeTable() {
+
+            var _contractStatusTable = $("#bia-contract-status-table").dataTable({
+                "bProcessing": true,
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [7] }
+                    ],
+                "fnDrawCallback": function () {
+                    BindButtonColumn();
+                }
+            });
+
+        }
+        
+        function BindButtonColumn() {
+
+            $('.bia-contract-status-dropdown').each(function () {
+                $(this).hide();
+            });
+
+            $('.bia-comment-textbox').each(function () {
+                $(this).hide();
+            });
+
+            $(".bia-edit-contract-status-button").each(function () {
+                $(this).unbind("click");
+                $(this).bind("click", function () {
+                    $(this).closest('tr').find('.bia-contract-status-dropdown').show();
+                    $(this).closest('tr').find('.bia-update-contract-status-button').show();
+                    $(this).closest('tr').find('.bia-comment-textbox').show();
+                    $(this).closest('tr').find('.bia-contract-status-text').hide();
+                    $(this).closest('tr').find('.bia-comment-text').hide();
+                    $(this).hide();
+                    var nationalID = $(this).closest('tr').find('.bia-national-id').val();
+                    var comment = $.trim($("#bia-comment-text-" + nationalID).text());
+                    var currentStatus = $.trim($(this).closest('tr').find('.bia-contract-status-text').text());
+                    $("#bia-comment-text-" + nationalID).html("<input type='text' value='" + comment + "' id='bia-comment-textbox-"+nationalID +"' />")
+                    $.get("/Hiring/ContractStatusTypes/?currentStatus="+currentStatus, function (data) {
+                        $("#bia-contract-status-dropdown-" + nationalID).html(data);
+                    });
+                    
+                });
+            });
+
+            $(".bia-update-contract-status-button").each(function () {
+                $(this).unbind("click");
+                $(this).hide();
+                $(this).bind("click", function () {
+                    var nationalID = $(this).closest('tr').find('.bia-national-id').val();
+                    var serialNumber = $(this).closest('tr').find('.bia-serial-number').val();
+                    var comment = $.trim($('#bia-comment-textbox-' + nationalID).val());
+                    var contractStatus = $(this).closest('tr').find('.bia-contract-statuses option:selected').val();
+                    var postToUrl = '/Hiring/ContractStatus/?nationalID=' + nationalID + '&serialNumber=' + serialNumber + '&contractStatus=' + contractStatus + '&comment=' + comment;
+                    $.post(postToUrl, function (data) {
+                        if (data.toString() == "True") {
+                            if (contractStatus == "Rejected") {
+                                $("#bia-update-contract-status-" + nationalID).replaceWith("");
+                                $("#bia-edit-contract-status-" + nationalID).replaceWith("");
+                            }
+                            alert("Updated Successfully");
+                            //                            $('#bia-contract-status-dropdown-' + nationalID).hide();
+                            $('#bia-update-contract-status-' + nationalID).hide();
+                            //                            $('#bia-comment-textbox-' + nationalID).hide();
+
+                            $('#bia-contract-status-text-' + nationalID).html(contractStatus);
+                            //                            $('#bia-comment-text-' + nationalID).text(comment);
+
+                            $('#bia-edit-contract-status-' + nationalID).show();
+                            $('#bia-contract-status-text-' + nationalID).show();
+                            $("#bia-comment-text-" + nationalID).html(comment);
+                            $("#bia-contract-status-dropdown-" + nationalID).html("");
+                            InitializeTable();
+                        }
+                        else
+                            alert("Error updating. Please try again.");
+                    });
+
+                });
+            });            
+        }
+
+    </script>
+}

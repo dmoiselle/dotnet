@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Bridge.Web.Models.NewPositionsSpecification>
+
+@{
+    ViewBag.Title = "List of Created Positions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List of Created Positions</h2>
+
+@section PageSpecificScriptIncludes {
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>
+}
+<p>
+    @Html.ActionLink("Create New Set...", "NewPositions", new { SchoolID = Model.FirstOrDefault().SchoolID, ContractType = Model.FirstOrDefault().ContractType })|
+    @Html.ActionLink("View Positions", "ViewPositions", new { SchoolID = Model.FirstOrDefault().SchoolID, ContractType = Model.FirstOrDefault().ContractType })
+</p>
+
+@using (Html.BeginForm("DeletePositions", "Administration", FormMethod.Post, new { name="VDeletes"}))
+{
+    <table id="table_id" class="display" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    SerialNumber
+                </th>
+                <th>
+                    SchoolID
+                </th>
+                <th>
+                    ClassID
+                </th>
+                <th>
+                    ClassificationDisplayText
+                </th>
+                <th>
+                    RecruitmentCycle
+                </th>
+                <th>
+                    StartDate
+                </th>
+                <th>
+                    EndDate
+                </th>
+                <th>
+                    ContractType
+                </th>
+                <th>
+                    CandidateType
+                </th>
+                <th>
+                    Select
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SerialNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SchoolID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClassID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClassificationDisplayText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecruitmentCycle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContractType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CandidateType)
+        </td>
+        <td>
+            @Html.CheckBox("ToDelete", false, new { value = item.SerialNumber })
+        </td>
+    </tr>
+}
+    </tbody>
+    <tfoot>
+        <tr>
+            @Html.Hidden("SchoolID", Model.FirstOrDefault().SchoolID)
+            @Html.Hidden("ContractType", Model.FirstOrDefault().ContractType)
+            <th colspan="10">
+                <input style="width:60px;float:right;" type="submit" value="Delete" />
+            </th>
+        </tr>
+    </tfoot>
+</table>
+}   
+    
+    <script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+        $('#table_id').dataTable({
+            "bJQueryUI": true,
+            bDestroy: true,
+            "sPaginationType": "full_numbers"
+        });
+    });
+	</script>

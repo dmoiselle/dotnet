@@ -1,0 +1,42 @@
+﻿@model Bridge.Domain.Recruiting.Assessment
+
+@{
+    ViewBag.Title = "Delete Assessment";
+}
+
+<h2></h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Assessment</legend>
+
+
+    <div class="display-label">Name:
+    
+      <span class="display-values">  @ViewBag.Name</span>
+    </div>
+
+    <div class="display-label">Assessment Type:
+    
+      <span class="display-values">  @Html.DisplayFor(model => model.AssessmentType)</span>
+    </div>
+
+    <div class="display-label">Score:
+   
+      <span class="display-values">  @Html.DisplayFor(model => model.RawTestScore)</span>
+    </div>
+
+   
+    <div class="display-label">Week:
+    
+        <span class="display-values"> @Html.DisplayFor(model => model.WeekNumber)</span>
+    </div>
+
+
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Assessments" )
+    </p>
+}

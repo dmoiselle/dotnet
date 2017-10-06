@@ -1,0 +1,131 @@
+﻿@model CandidatesLettersModel
+@using Bridge.Domain.Recruiting
+@using Bridge.Web.Models
+@{
+    ViewBag.Title = "Letters";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>   
+    
+}
+
+<h2>Letters</h2>
+
+<div id="bia-hiring-candidate-filters">
+        
+        <div class="bia-hiring-candidate-option">
+            <label for="bia-hiring-candidate-type-dropdown">
+                Candidate Type</label>
+                @Html.DropDownList("CandidateType", Model.CandidateTypes, "All", new { id = "bia-hiring-candidate-type-dropdown"})
+            
+        </div>
+
+</div>
+
+<div class="clear-float"></div>
+  
+ <!--<table id ="table_id" class ="display">-->
+ <div class="bia-hiring-contracts-table-wrapper">
+    <table id="bia-hiring-candidates-table" style="width:100%">
+    <thead>
+    <tr>
+         <th>Candidate Type</th>         
+         <th>Hiring Status</th>
+         <th>No. of Positions</th>   
+         <th>Generate Spreadsheet</th>
+     </tr>
+     </thead>
+     @if (Model.LettersListItems.Any(c => c.CandidateType == CandidateType.Teacher)) {
+        
+             <tr>
+                 <td>Teacher</td>     
+                 <td>Backup</td>
+                 <td>@Model.NumberOfLettersForBackupTeacherCandidates</td>
+                 
+                 <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcel", new {
+                    candidateType = CandidateType.Teacher,
+                    offerStatus = HiringStatus.Backup
+
+                })</td>
+
+             </tr>    
+
+             <tr>
+                 <td>Teacher</td>     
+                 <td>Rejected</td>
+                 <td>@Model.NumberOfLettersForRejectedTeacherCandidates</td>
+                 <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcel", new {
+                    candidateType = CandidateType.Teacher,
+                    offerStatus = HiringStatus.Rejected
+
+                })</td>
+
+             </tr>    
+             <tr>
+                 <td>Teacher</td>     
+                 <td>Relocated</td>
+                 <td>@Model.NumberOfLettersForRelocatedTeacherCandidates</td> 
+                 <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcelForRelocatedCandidates", new {
+                    candidateType = CandidateType.Teacher,
+                    offerStatus = HiringStatus.Assigned
+
+                })</td>
+
+             </tr>    
+     }
+       @if (Model.LettersListItems.Any(c => c.CandidateType == CandidateType.AcademyManager)) {
+             <tr>
+                <td>Academy Manager</td>
+                <td>Backup</td>
+                <td>@Model.NumberOfLettersForBackupAMCandidates</td>
+                
+                <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcel", new {
+                   candidateType = CandidateType.AcademyManager,
+                   offerStatus = HiringStatus.Backup
+               })</td>
+             </tr>  
+
+             <tr>
+                <td>Academy Manager</td>
+                <td>Rejected</td>
+                <td>@Model.NumberOfLettersForRejectedAMCandidates</td>
+                <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcel", new {
+                   candidateType = CandidateType.AcademyManager,
+                   offerStatus = HiringStatus.Rejected
+
+               })</td>
+
+             </tr>    
+             <tr>
+                <td>Academy Manager</td>
+                <td>Relocated</td>
+                <td>@Model.NumberOfLettersForRelocatedAMCandidates</td>
+                <td>@Html.ActionLink("Generate Spreadsheet", "ContractLettersExcelForRelocatedCandidates", new {
+                   candidateType = CandidateType.AcademyManager,
+                   offerStatus = HiringStatus.Assigned
+
+               })</td>
+
+             </tr>    
+       }
+ </table>
+ </div>
+ 
+   <script type="text/javascript" charset="utf-8">
+
+       $(document).ready(function () {
+
+           var lettersGui = new bia_candidates_letters();
+           lettersGui.Initialize();
+
+           $('#bia-hiring-candidates-table').dataTable({
+               
+               "bJQueryUI": true
+               
+           });
+
+       });
+
+	</script>

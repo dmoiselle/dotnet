@@ -1,0 +1,112 @@
+﻿@using Bridge.Domain.Recruiting
+@model CandidateViewModel
+@{
+    ViewBag.Title = "Candidates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScripts {
+    <script type="text/javascript" src="/Scripts/jquery.jeditable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var candidatesgui = new bia_candidates();
+            candidatesgui.Initialize();
+            $('.edit').editable('/Training/QuickEditAssessmentScore',
+            {
+                indicator: 'Saving...',
+                tooltip: 'Click to edit...',
+                cancel: 'Cancel',
+                submit: 'Ok'
+            });
+
+            var candidatescoresgui = new bia_candidate_scores();
+            candidatescoresgui.Initialize();
+        });
+    </script>
+}
+
+
+@using (Html.BeginForm("UpdateCandidateStatus", "Training", FormMethod.Post, new { @id = "bia-candidate-status-update-form" })) {
+<table style="border-width: 0px"><tr><td>
+<div id="bia-assessments-table">
+        
+        <div class="label">
+            Name: 
+        </div>
+        <div class="item">
+            @Model.CurrentCandidate.First_Name @Model.CurrentCandidate.Middle_Name @Model.CurrentCandidate.Last_Name
+        </div>
+        <br /><br />
+        <div class="label">
+            National ID:
+        </div>
+        <div class="item">
+            @Model.CurrentCandidate.NationalID
+        </div>
+        <br /><br />
+        <div class="label">
+            Candidate Type:
+        </div>
+        <div class="item">
+            @Model.CurrentCandidate.CandidateType.ToString()
+        </div>  
+        <br /><br />
+
+ <div class="bia-candidate-status">
+        <label class="bia-candidate-status-label" for="bia-candidate-status-dropdown">
+            Candidate Status: @Model.CurrentCandidate.CurrentCandidateStatus &nbsp;&nbsp;&nbsp;&nbsp; @Html.ActionLink("Change Status", "ChangeCandidateStatus", new { id = @Model.CurrentCandidate.NationalID })
+        </label>
+             
+ </div>
+</div>
+
+</td>
+<td>
+
+
+</td>
+</tr></table>
+    <br style="clear: both" />
+   
+<div class="bia-candidate-results-table">
+<table>
+    <tr>
+    <th>
+        Assessment
+    </th>
+    @foreach (var week in Model.WeekNumbers) {
+    <th>
+        Week @week   
+    </th>    
+    }
+    </tr>   
+    @foreach (var row in @Model.CandidatePerformanceGroupedByAssessmentType) {
+        <tr>
+        <td>@row["AssessmentType"]</td>
+        @foreach (var week in Model.WeekNumbers) {
+        <td>
+        @{
+             
+            var split = @row[@week].ToString().Split(',');
+            if (split.Count() > 1) {
+                var _id = split[0].Replace("[", "");
+                var _score = split[1].Replace("]", ""); 
+
+               <div class="edit" id="@_id">
+                     @_score
+              </div>
+            }
+         }
+      &nbsp;  
+    </td>
+        }    
+    
+        </tr>
+    }
+    </table>            
+</div>
+    
+    
+
+    
+}

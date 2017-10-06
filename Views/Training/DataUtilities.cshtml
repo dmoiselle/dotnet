@@ -1,0 +1,104 @@
+﻿@using Bridge.Web.Models
+@model IEnumerable<SSISPackageViewModel>
+@{
+    ViewBag.Title = "Data Utilities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>   
+    
+}
+
+<style>
+
+.hide-me{display:@(Model.Any(r => r.LastExecution.HasValue) ? "table-cell" : "none");}
+
+.show-me{display:@(Model.Any(r => r.LastExecution.HasValue) ? "none" : "in-line");}
+</style>
+<div class="bia-page-header">
+    <h2>Data Utilities</h2>
+</div>
+   
+<div class="bia-righthand_links">
+    @Html.ActionLink( "Back To Candidates List", "Index", "Training" )
+    @if (Model.FirstOrDefault().LastExecution.HasValue) { 
+        @Html.ActionLink("Back to Data Utilities", "DataUtilities") 
+    }
+</div>
+
+<div class="clear-float"></div>
+
+<p class="show-me">NB: Please execute in the provided order because every subsequent process is somehow <u>DEPENDENT</u> on the former</p>
+  <table class = "display" id="table_id2" border="0">
+    <thead>
+    
+    <tr>
+    <th>Package Name</th>
+    <th>Description</th>
+    
+    
+   <th class="hide-me">Last Execution</th>
+   <th class="hide-me">Outcome</th>
+   <th>Action</th>
+
+    </tr>
+
+    
+    </thead>
+    <tbody>
+
+
+
+@foreach (var package in Model)
+{
+
+    using (Html.BeginForm("Execute_SSIS_Package", "Training", package , FormMethod.Post))
+    {  
+   @Html.ValidationSummary()
+   
+    <tr>
+   
+     <td>@package.PackageName</td>
+    <td>@package.Description</td>
+   
+    <td class="hide-me">@package.LastExecution</td>
+    <td class="hide-me">@package.LastOutcome</td>
+     <td><input type="submit"  value="Run - @package.PackageName" /></td>
+    @*@Html.Hidden("PathName", package.PathName)
+    @Html.Hidden("ScriptType", package.ScriptType)
+    @Html.Hidden("PackageID", package.PackageID)
+    @Html.Hidden("LastOutcome", package.LastOutcome)*@
+    @Html.Hidden("DataRoutineFeedback", package.DataRoutineFeedback)
+    
+       </tr>
+    
+    }
+    
+    
+}
+</tbody>
+    </table>
+    
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bia_init_right_hand_links();
+        });
+
+      
+//   
+
+//        $(".autoSubmit").change(function () {
+//            $(this).closest("form")[0].submit();
+//        });
+
+
+        $(document).ready(function () {
+            $('#table_id').dataTable({
+                // "sDom": '<"top"i>rt<"bottom"flp><"clear">'
+            });
+        });
+	</script>

@@ -1,0 +1,90 @@
+﻿@using Bridge.Web.Validators
+@model WageGradeModel
+@{
+    ViewBag.Title = "WageGrade";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Wage Grade</h2>
+
+<div class="bia-wage-grade-table">
+@using (Html.BeginForm("EditWageGrade", "Administration")) {
+    
+    <table>
+        <tr><td colspan="8">@Html.ValidationSummary(false, "Please fix these errors")</td></tr>
+        <tr>
+            
+            
+            <td>@Html.LabelFor(model => model.CandidateType, "Candidate Type")
+            @Html.Hidden("CandidateType", Model.CandidateType)
+            </td>
+            <td>
+            <strong>@Html.Label(Model.CandidateType)</strong>
+            </td>
+            </tr>
+            <tr>
+            <td>@Html.Label("Wage Category ID")</td>
+            <td>
+            <strong>@Html.Label(Model.WageCategoryID.ToString())</strong>
+            @Html.Hidden("WageCategoryID", Model.WageCategoryID)
+            @Html.Hidden("RecruitmentCycle", Model.RecruitmentCycle)
+            </td>
+           
+            
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.MinimumWage, "Minimum Wage")</td>
+            <td>@Html.TextBox("MinimumWage", Model.MinimumWage.ToString("0.00"), new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)" })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(model => model.DailyRate, "Daily Rate")</td>
+            <td>@Html.TextBox("DailyRate", Model.DailyRate.ToString("0.00"), new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)"})</td>
+        </tr>
+
+        @if (Model.CandidateType == "Teacher") {
+        <tr>
+            <td>@Html.LabelFor(model => model.HolidayMonths, "Holiday Months")</td>
+            <td>@Html.TextBox("HolidayMonths", Model.HolidayMonths.ToString("0.00"), new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)" })</td>
+        </tr>
+        }
+            
+        <!--<tr>
+            <td>@*Html.LabelFor(model => model.NHIF, "NHIF")*@
+            <td>@*Html.LabelFor(model => model.NSSF, "NSSF")*@</td>
+            <td>@*Html.TextBox("NSSF", Model.NSSF, new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)" })
+                *@</td>
+            <td>@*Html.LabelFor(model => model.DailyRate, "Daily Rate")*@</td>
+            <td>@*Html.TextBox("DailyRate", Model.DailyRate, new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)" })
+                *@</td>
+            <td>@*Html.LabelFor(model => model.Above21DaysDailyRate, "Above 21 Days Daily Rate")*@</td>
+            <td>@*Html.TextBox("Above21DaysRate", Model.Above21DaysDailyRate, new { style = "width: 100px;", @onkeypress = "return isNumberKey(event)" })
+                *@/td>
+        </tr>-->
+        <tr>
+            <td>
+                <input type="submit" value="Save" onclick="return confirm('Are you sure you want to save new Wage Grade values?')" />
+            </td>
+        </tr>
+    </table>
+}
+</div>
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {                 
+
+            $(".bia-righthand_links a").button();
+
+        });
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+    </script>
+}

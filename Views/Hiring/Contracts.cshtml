@@ -1,0 +1,86 @@
+﻿@model CandidatesContractTypesModel
+@using Bridge.Web.Models;
+@{
+    ViewBag.Title = "Contracts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>   
+    
+}
+
+
+
+<h2>Contracts</h2>
+
+<div id="bia-hiring-candidate-filters">
+        
+        <div class="bia-hiring-candidate-option">
+            <label for="bia-hiring-candidate-type-dropdown">
+                Candidate Type</label>
+                @Html.DropDownList("CandidateType", Model.CandidateTypes, "All", new { id = "bia-hiring-candidate-type-dropdown"})
+            
+        </div>
+
+        <div class="bia-hiring-candidate-option">
+            <label for="bia-contract-type-dropdown">Contract Type</label>
+                @Html.DropDownList("ContractType", Model.ContractTypes, "All", new { id = "bia-contract-type-dropdown" })
+            
+        </div>
+   </div>
+<div class="clear-float">
+</div>
+ <br /><br />
+ 
+ <!--<table id ="table_id" class ="display">-->
+ <div class="bia-hiring-contracts-table-wrapper">
+    <table id="bia-hiring-candidates-table" style="width:100%">
+    <thead>
+    <tr>
+         <th>Candidate Type</th>
+         <th>Contract Type</th>
+         <th>No. of Positions</th>
+         <th>Offered</th>
+         <th>Accepted</th>
+         <th>Declined</th>
+         <th>Generate Spreadsheet</th>
+     </tr>
+     </thead>
+     
+        @foreach (var item in Model.ContractListItems)
+        {
+     <tr>
+     <td>@item.CandidateType</td>
+     <td>@item.ContractType</td>
+     <td>@item.NoOfPositions</td>
+     <td>@item.Offered</td>
+     <td>@item.Accepted</td>
+     <td>@item.Declined</td>
+     <td>@Html.ActionLink("Generate Spreadsheet", "OffersExcel", new { 
+        recruitmentCycle = item.RecruitmentCycle,
+        //trainingSiteID = null,
+        position = item.PositionTypeID,
+        contractType = item.ContractTypeID.ToString()
+    })</td>
+
+     </tr>       
+        }
+     
+ </table>
+ </div>
+ 
+   <script type="text/javascript" charset="utf-8">
+
+       
+       $(document).ready(function () {
+
+           var contractsGui = new bia_candidates_contract_types();
+           contractsGui.Initialize();
+
+           $('#bia-hiring-candidates-table').dataTable({
+               "bJQueryUI": true
+               // "sDom": '<"top"i>rt<"bottom"flp><"clear">'
+           });
+       });
+	</script>

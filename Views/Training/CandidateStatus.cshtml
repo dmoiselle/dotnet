@@ -1,0 +1,10 @@
+﻿@model CandidateHistoryEntryModel
+           
+@if (@Model == null)
+{
+    <text>No Candidate Found</text>
+}
+else
+{
+    @Model.currentStatus
+}

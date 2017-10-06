@@ -1,0 +1,209 @@
+﻿@model PositionsModel
+
+@{
+    ViewBag.Title = "Positions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>   
+    
+}
+
+<h2>Positions</h2>
+
+<div id="bia-positions-filters">
+    
+    <div id="bia-positions-status" class="bia-positions-option">
+        <label class="bia-positions-status-label" for="bia-positions-status-dropdown">
+            Position Status: 
+        </label>
+        @Html.DropDownList("PositionStatus", Model.PositionStatus, new { id = "bia-position-status-dropdown" })
+    </div>
+
+    <div id="bia-positions-target-academy" class="bia-positions-option">
+        <label class="bia-positions-target-academy-label" for="bia-target-academy-dropdown">
+            Academy: 
+        </label>
+        @Html.DropDownList("Academy", Model.TargetAcademies, "All", new { id = "bia-position-academy-dropdown" })
+        
+    </div>
+            
+    <div id="bia-positions-candidate-type" class="bia-positions-option">
+        <label class="bia-positions-candidate-type-label" for="bia-candidate-type-dropdown">
+            Candidate Type: 
+        </label>
+        @Html.DropDownList("CandidateType", Model.CandidateTypes, "All", new { id = "bia-position-candidate-type-dropdown" })
+       
+    </div>    
+    
+</div>
+
+<div class="clear-float"></div>
+<div class="bia-positions-table-wrapper">
+
+    <table id="bia-positions-table" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Position No.
+                </th>
+                <th>
+                    Academy
+                </th>
+                <th>
+                    Candidate Type
+                </th>
+                <th>
+                    Candidate Name
+                </th>
+                <th>
+                    Summary Score
+                </th>
+                <th>
+                    Rating
+                </th>
+                <th>
+                    Facilitator Rec.
+                </th>
+                <th>
+                    Facilitator Remarks
+                </th>
+                <th>
+                    Position Status 
+                </th>
+                <th>
+                    Contract Acceptance
+                </th>
+                <th>
+            
+                </th>
+            </tr>
+        </thead>
+        <tbody>  
+            @foreach (var position in Model.Positions)
+            {
+                <tr>
+                    <td class="bia-positions-serial-number">
+                        @position.SerialNumber
+                    </td>
+                    <td>
+                        @position.Academy 
+                    </td>
+                    <td class="bia-positions-candidate-type">
+                        @position.CandidateType 
+                    </td>
+                    @if (position.Candidate != null)
+                    {
+                        <td class="bia-positions-candidate-name">
+                            @Html.ActionLink(position.Candidate.FullName, "CandidateProfile", "Training", new { id = position.Candidate.NationalID }, new { id = position.Candidate.NationalID }) 
+                        </td>
+                        <td class="bia-positions-candidate-summary-score">
+                            @string.Format("{0:0%}", position.Candidate.SummaryScore)
+                           
+                        </td>
+                        <td>
+                            @position.Candidate.StarGrade
+                        </td>
+                        <td>
+                            @position.Candidate.RecommendedPosition
+                        </td>
+                        <td>
+                            @position.Candidate.FacilitatorRemarks
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    }
+                    <td>
+                        @position.PositionStatus
+                    </td>
+                    <td>
+                        @position.ContractAcceptanceStatus
+                    </td>
+                    <td>
+                        @if (position.Candidate != null)
+                        {
+                            <input type="button" value="Unassign" class="bia-positions-unassign-button" style="width :80px"   />
+                        }
+                        else
+                        { 
+                            <input type="button" value="Assign" class="bia-positions-assign-button" style="width : 80px"  />
+                        }
+                    </td>
+                
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var bia_positions_gui = new bia_positions();
+            bia_positions_gui.Initialize();
+
+            $('#bia-positions-table').dataTable({
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                           { 'bSortable': false, 'aTargets': [10] }
+                    ],
+                "fnDrawCallback": function () {
+                    BindButtonColumn();
+                }
+            });
+        });
+
+        function BindButtonColumn() {
+
+            $(".bia-positions-assign-button").unbind("click").bind("click", function () {
+
+                var serialNumber = $.trim($(this).closest('tr').find('.bia-positions-serial-number').html());
+                var candidateType = $.trim($(this).closest('tr').find('.bia-positions-candidate-type').html());
+                
+                window.location = "/Hiring/PositionAssignment/?serialNumber=" + serialNumber + "&" + GetFilters();
+
+            });
+
+            $(".bia-positions-unassign-button").unbind("click").bind("click", function () {
+                var serialNumber = $.trim($(this).closest('tr').find('.bia-positions-serial-number').html());
+                var candidateName = $.trim($(this).closest('tr').find('.bia-positions-candidate-name').text());
+
+                bia_show_confirmation_dialog(
+                    "Unassign position",
+                    "Unassign <b>" + candidateName + "</b> position (" + serialNumber + ")",
+                    function () { // onOK callback
+                        $.post("/Hiring/UnassignPosition/?serialNumber=" + serialNumber, function (result) {
+                            if (result == serialNumber) {
+                                window.location = "/Hiring/Positions/?" + GetFilters();
+                            } else {
+                                bia_show_dialog("Error", result);
+                            }
+                        });
+                    });
+            });
+        }
+
+        function GetFilters(){
+            
+            var academy = $("#bia-position-academy-dropdown option:selected").val();
+            var positionStatus = $("#bia-position-status-dropdown option:selected").val();
+            var candidateType = $("#bia-position-candidate-type-dropdown option:selected").val();
+            
+            return bia_construct_position_filter(academy, positionStatus, candidateType);
+        }
+
+    </script>
+}

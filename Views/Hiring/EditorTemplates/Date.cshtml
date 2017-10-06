@@ -1,0 +1,21 @@
+﻿
+@model DateTime
+
+<script src="../../../Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="../../../Scripts/jquery-ui-1.8.17.min.js" type="text/javascript"></script>
+
+
+@Html.TextBox("", Model.ToString("dd/MM/yyyy"), new { @class = "date" }) 
+@*** TODO Wire up the date picker! ***@
+    
+    
+
+   <script type="text/javascript" charset="utf-8">
+
+    $(document).ready(function () {
+        $('.date').datepicker({ dateFormat: "dd-M-yy" })
+        .formatDate('yy-mm-dd', new Date(2007, 1 - 1, 26));
+        
+    }); 
+
+    </script>

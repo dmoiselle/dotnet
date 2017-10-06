@@ -1,0 +1,170 @@
+﻿@using Bridge.Web.Validators
+@model WageGradesModel
+@{
+    ViewBag.Title = "Wage Grades";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {    
+
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.min.js" )" type="text/javascript"></script>
+   <script src="@Url.Content( "~/Scripts/jquery.jeditable.js" )" type="text/javascript"></script>
+   <script src="@Url.Content( "~/Scripts/jquery.dataTables.editable.js" )" type="text/javascript"></script>
+}
+    
+
+<br />
+<h2>Wage Grades</h2>   
+
+<div id="bia-hiring-candidate-filters">
+        
+        <div class="bia-hiring-candidate-option">
+            <label for="bia-hiring-candidate-type-dropdown">
+                Candidate Type</label>
+                @Html.DropDownList("CandidateType", Model.CandidateTypes, "All", new { id = "bia-hiring-candidate-type-dropdown"})
+            
+        </div>
+
+        <div class="bia-hiring-candidate-option">
+            <label for="bia-wage-categories-dropdown">Wage Category:</label>
+                @Html.DropDownList("WageCategoryID", Model.WageCategories, "All", new { id = "bia-wage-category-dropdown" })
+            
+        </div>
+   </div>
+<div class="clear-float"> </div>
+        
+<div class="bia-wage-grades-list-table">
+    <table id="bia-wage-grades-listing-table">
+        <thead>
+                <tr>   
+                    <th>Wage Category ID</th>
+                    <th>Candidate Type</th>
+                    <th>Monthly Rate</th>
+                    <th>Net Monthly Rate</th>
+                    <th>Two Weeks Rate</th>
+                    <th>Regular Months</th>
+                    <th>Holiday Months</th>
+                    <th>April Total</th>
+                    <th>August Total</th>
+                    <th>December Total</th>
+                    <th>Annual Total</th>
+                    <th>NHIF</th>
+                    <th>NSSF</th>
+                    <th>Daily Rates</th>
+                    <th>Above 21 Days</th>
+                    <th>Edit</th>
+                </tr>
+        </thead>
+        <tbody>
+        @foreach (var wageGrade in Model.WageGrades) {
+            <tr>
+            
+                <td>Group @wageGrade.WageCategoryID
+                    <input class="bia-wage-category-id" type="hidden" value="@wageGrade.WageCategoryID" />
+                </td>
+               
+                <td>@wageGrade.CandidateType
+                    <input class="bia-candidate-type" type="hidden" value="@wageGrade.CandidateType" />
+                </td>
+                <td>@wageGrade.MonthlyRate.ToString("0.00")
+                    @Html.Hidden("MonthlyRate", wageGrade.MonthlyRate)
+                </td>
+                <td>@wageGrade.NetMonthlyRate.ToString("0.00")
+                    @Html.Hidden("NetMonthlyRate", wageGrade.NetMonthlyRate)
+                </td>
+                <td>@wageGrade.TwoWeeksRate.ToString("0.00")
+                    @Html.Hidden("TwoWeeksRate", wageGrade.TwoWeeksRate)
+                </td>
+                <td>@wageGrade.RegularMonths.ToString("0.00")
+                    @Html.Hidden("RegularMonths", wageGrade.RegularMonths)
+                </td>
+                <td>@wageGrade.HolidayMonths.ToString("0.00")
+                    @Html.Hidden("HolidayMonths", wageGrade.HolidayMonths)
+                </td>
+                <td>@wageGrade.AprilTotal.ToString("0.00")
+                    @Html.Hidden("AprilTotal", wageGrade.AprilTotal)
+                </td>
+                <td>@wageGrade.AugustTotal.ToString("0.00")
+                    @Html.Hidden("AugustTotal", wageGrade.AugustTotal)
+                </td>
+                <td>@wageGrade.DecemberTotal.ToString("0.00")
+                    @Html.Hidden("DecemberTotal", wageGrade.DecemberTotal)
+                </td>
+                <td>@wageGrade.AnnualTotal.ToString("0.00")
+                    @Html.Hidden("AnnualTotal", wageGrade.AnnualTotal)
+                </td>
+                <td>@wageGrade.NHIF.ToString("0.00")
+                    @Html.Hidden("NHIF", wageGrade.NHIF)
+                </td>
+                <td>@wageGrade.NSSF.ToString("0.00")
+                    @Html.Hidden("NSSF", wageGrade.NSSF)
+                </td>
+                <td>@wageGrade.DailyRate.ToString("0.00")
+                    @Html.Hidden("DailyRate", wageGrade.DailyRate)
+                </td>
+                <td>@wageGrade.Above21DaysDailyRate.ToString("0.00")
+                    @Html.Hidden("Above21DaysDailyRate", wageGrade.Above21DaysDailyRate)
+                </td>    
+                <td><input type="submit" value="Edit" id="bia-wage-grade-edit-@wageGrade.WageCategoryID-@wageGrade.CandidateType-@wageGrade.ContractType" class ="bia-wage-grade-edit" /></td>       
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var wageGradesGui = new bia_wage_grades();
+            wageGradesGui.Initialize();
+
+            $("#bia-wage-grades-listing-table").dataTable({
+                
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "fnDrawCallback": function () {
+                    BindButtonColumn();
+                }
+
+            });
+
+        });
+
+        function BindButtonColumn() {
+
+            $(".bia-wage-grade-edit").unbind("click").bind("click", function () {
+                
+                var wageCategoryID = $(this).closest('tr').find('.bia-wage-category-id').val();
+                var candidateType = $(this).closest('tr').find('.bia-candidate-type').val();
+                //var contractType = $(this).closest('tr').find('.bia-contract-type').val();
+
+               
+                    window.location = "/Administration/WageGrade/?wageCategoryID=" + wageCategoryID + "&candidateType=" + candidateType;
+               
+
+            });
+                
+        }
+
+        
+
+//        function BindSubmitButton() {
+
+//           alert("Test BindSubmit");
+
+//            $(".bia-wage-grade-edit").each(function () {
+//                $(this).unbind();
+//                alert("Test binding");
+//                $(this).bind("click", function () {
+//                    var wageCategoryID = $(this).closest('tr').find('.bia-wage-category-id').val();
+//                    var candidateType = $(this).closest('tr').find('.bia-candidate-type').val();
+//                    var contractType = $(this).closest('tr').find('.bia-contract-type').val();
+//                    $("#bia-wage-grade-edit-" + wageCategoryID + "-" + candidateType + "-" + contractType).submit(function () { });
+//                });
+//            });
+//       }                 
+//        
+    </script>
+}

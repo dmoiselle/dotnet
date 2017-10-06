@@ -1,0 +1,195 @@
+﻿@using Bridge.Web.Models
+@using Bridge.Web.Utility
+
+@model FacilitatorRecommendationsModel
+
+@{
+    ViewBag.Title = "Facilitator Recommendations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+    <script type="text/javascript" src="/Scripts/jquery.jeditable.js"></script>
+}
+
+<h2>Enter Facilitator Recommendations and Remarks</h2>    
+
+<div id="bia-candidate-filters">
+    
+    <div class="bia-training-site">
+        <label class="bia-training-site-label" for="bia-training-site-dropdown">
+            Training Site:
+        </label>
+        @Html.DropDownList("TrainingSiteID", Model.TrainingSites, "All", new { id = "bia-training-site-dropdown" })
+    </div>
+
+    <div class="bia-training-class">
+        <label class="bia-training-class-label" for="bia-training-class-dropdown">
+            Training Class:
+        </label>
+        @Html.DropDownList("TrainingClassID", Model.TrainingClasses, "All", new { id = "bia-training-class-dropdown" })
+    </div>
+
+    <div class="bia-candidate-type">
+        <label class="bia-candidate-type-label" for="bia-candidate-type-dropdown">
+            Candidate Type:
+        </label>
+        @Html.DropDownList("CandidateType", Model.CandidateTypes, new { id = "bia-candidate-type-dropdown" })
+    </div>
+    @Html.Hidden( "CandidatesURL", Url.Action( "FacilitatorRecommendations" ) )
+</div>
+
+<div class="clear-float"></div>
+
+
+<div class="bia-candidate-results-table">
+    <table id="bia-candidates-facilitator-recommendations">
+        <thead>
+            <tr>
+                <th class="bia-name">
+                   Candidate 
+                </th>
+                <th class="bia-name">
+                   Training Class 
+                </th>
+                @foreach (var week in Model.WeekNumbers)
+                { 
+                    <th class="bia-week-@week-score bia-weekly-score-heading">
+                        Week @week
+                    </th>
+                }
+                <th class="bia-summary-score">
+                    Summary Score
+                </th>
+                <th class="bia-star-rating">
+                    Star Rating
+                </th>
+                <th>
+                    Recommended Position
+                </th>
+                <th>
+                    Remarks
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var candidate in Model.Candidates)
+            {
+                <tr class="bia-candidate">
+                    <td class="bia-name">
+                        @(candidate.FirstName + " " + candidate.MiddleName + " " + candidate.LastName)
+                        @Html.Hidden("NationalID_" + candidate.NationalID, candidate.NationalID, new {@class = "bia-candidate-id" })
+                        @Html.Hidden("CandidateType_" + candidate.NationalID, candidate.CandidateType, new {@class = "bia-candidate-type" })
+                    </td>
+                    <td>
+                        @candidate.TrainingClassID
+                    </td>
+                    @foreach (var week in Model.WeekNumbers)
+                    {
+                        <td class="bia-week-@week-score bia-weekly-score">
+                            @if (candidate.WeeklyAssessments.Any(a => a.WeekNumber == week))
+                            {
+                                @string.Format("{0:0%}", candidate.WeeklyAssessments.First(a => a.WeekNumber == week).Score)
+                            }
+                            else
+                            {
+                                <text>--</text>
+                            }
+                        </td>
+                    }
+                    <td class="bia-summary-score">
+                        @if (candidate.SummaryScore.HasValue)
+                        {
+                            @string.Format("{0:0%}", candidate.SummaryScore)
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                    </td>
+                    <td class="bia-star-rating">
+                        @if (candidate.StarGrade.HasValue)
+                        {
+                            <span class="rating-static rating-@candidate.StarGrade"></span>
+                        }
+                        else
+                        {
+                            <span class='rating-static rating-0'></span>
+                        }
+                        <span style='display:none'>@candidate.SummaryScore</span>
+                    </td>
+                    <td class="bia-recommended-class">@candidate.PrettyFacilitatorRecommendedPosition</td>
+                    <td class="bia-facilitator-remarks">@candidate.FacilitatorRemarks</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section PageSpecificScripts {
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var facilitatorRecommendationsGUI = new bia_facilitator_recommendations();
+            facilitatorRecommendationsGUI.Initialize();
+            bia_init_right_hand_links();
+
+            $('#bia-candidates-facilitator-recommendations').dataTable({
+                "bJQueryUI": true,
+                bDestroy: true,
+                "sPaginationType": "full_numbers",
+                "fnDrawCallBack": BindColumns()
+            });
+
+            function BindColumns() {
+                $(".bia-recommended-class").each(function () {
+                    if ($(this).text() == "None") {
+                        $(this).text("Click to edit...");
+                    }
+                    $(this).unbind("click").bind("click", function () {
+                        var nationalID = $(this).closest('tr').find('.bia-candidate-id').val();
+                        var candidateType = $(this).closest('tr').find('.bia-candidate-type').val();
+                        var selectOpts = candidateType == 'Teacher' ? " {'NotRecommended':'Not Recommended','ECD':'ECD','Class12':'Class 1/2', 'Class345':'Class 3/4/5'}"
+                                                                    : " {'NotRecommended':'Not Recommended','AcademyManagerMain':'AM Man', 'AcademyManagerSub':'AM Sub'}";
+                        $(this).editable('/Training/EditFacilitatorRecommendedPosition',
+                                        {
+                                            type: 'select',
+                                            data: selectOpts,
+                                            name: 'recommendedPosition',
+                                            submitdata: { nationalID: nationalID },
+                                            submit: 'OK',
+                                            indicator: 'Saving...',
+                                            tooltip: 'Click to edit...',
+                                            event: 'edit'
+                                        }).trigger("edit");
+                    });
+                });
+
+                $(".bia-facilitator-remarks").each(function () {
+                    if ($(this).text() == "") {
+                        $(this).text("Click to edit...");
+                    }
+                    $(this).unbind("click").bind("click", function () {
+                        if ($(this).text() == "Click to edit...") {
+                            $(this).text("");
+                        }
+                        var nationalID = $(this).closest('tr').find('.bia-candidate-id').val();
+                        var width = $(this).width() - 50;
+                        $(this).editable('/Training/EditFacilitatorRemarks',
+                        {
+                            indicator: 'Saving...',
+                            submit: 'OK',
+                            tooltip: 'Click to edit...',
+                            placeholder: 'Click to edit...',
+                            name: 'remarks',
+                            width: width,
+                            height: '1.2em',
+                            submitdata: { nationalID: nationalID },
+                            event: 'edit'
+                        }).trigger("edit");
+                    });
+                });
+            }
+
+        });
+    </script>
+}

@@ -1,0 +1,7 @@
+﻿@model AssessmentModel         
+<tr>
+    <td class="bia-candidate-name">@Model.Name</td>
+    <td class="bia-national-id">@Model.NationalID</td>
+    <td class="bia-assessment-score">@Model.Score</td>
+    <td class="bia-assessment-action">@Html.ActionLink( "Delete", "AssessmentDelete", new { id = Model.AssessmentID , Name = Model.Name} )</td>
+</tr>

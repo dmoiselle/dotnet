@@ -1,0 +1,503 @@
+﻿@using Bridge.Domain.Recruiting
+@model CandidateViewModel
+@{
+    ViewBag.Title = "Candidate Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section PageSpecificScripts {
+    <script type="text/javascript" src="/Scripts/jquery.jeditable.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var candidatesgui = new bia_candidates();
+            candidatesgui.Initialize();
+            $('.edit').editable('/Training/QuickEditAssessmentScore',
+            {
+                indicator: 'Saving...',
+                tooltip: 'Double-click to edit...',
+                cancel: 'Cancel',
+                submit: 'Ok'
+            });
+
+            var candidatescoresgui = new bia_candidate_scores();
+            candidatescoresgui.Initialize();
+        });
+    </script>
+}
+
+<h2>Candidate Profile - @Model.CurrentCandidate.CandidateType</h2> 
+
+<div id="bia-candidate-profile">
+
+<fieldset>
+<legend>
+General Candidate Details
+</legend>
+
+<table style="border-style:none;">
+    <tr>
+        <td>National ID Number:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.NationalID</td>
+        <td colspan="4"></td>
+    </tr>
+    <tr>
+        <td>First Name:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.First_Name </td>
+        <td>Middle Name:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.Middle_Name </td>
+        <td>Last Name:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.Last_Name</td>
+    </tr>
+    
+    <tr>
+        <td>Gender:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.Gender</td>
+        <td>Language:</td>
+        <td colspan="3" class="bia-candidate-profile-data">@Model.CurrentCandidate.OtherSpokenLanguages</td>
+    </tr>
+
+    <tr>
+        <td>Current Location:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.CurrentLocation</td>
+        <td>Name of Area Chief:</td>
+        <td colspan="3"  class="bia-candidate-profile-data">@Model.CurrentCandidate.NameOfYourChief</td>        
+    </tr>
+
+    <tr>
+        <td>Postal Address:</td>
+        <td colspan="5"  class="bia-candidate-profile-data">@Model.CurrentCandidate.PostalAddress</td>
+        
+    </tr>
+
+    <tr>
+        <td>Home District Information</td>
+        <td>Home District:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.HomeDistrict</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Division:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.Division</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Location:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.Location</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Sub-Location:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.SubLocation</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Phone Number 1:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.PhoneNumber1</td>
+       
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Phone Number 2:</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.PhoneNumber2</td>
+        
+    </tr>
+
+</table>
+</fieldset>
+
+<div class="clear-float"></div><br />
+
+<fieldset>
+<legend>
+Candidate Education Profile
+</legend>
+
+<table style="border-style:none;">
+    <tr>
+        <td>Secondary School:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.SecondarySchool</td>
+        <td>Secondary School Location:</td>
+        <td colspan="3" class="bia-candidate-profile-data">@Model.CurrentCandidate.SecondarySchoolLocation</td>
+        
+    </tr>
+    
+    <tr>
+        <td>Year of Completion:</td>
+        <td colspan="5" class="bia-candidate-profile-data">@Model.CurrentCandidate.YearofSecCompletion</td>
+        
+    </tr>
+
+    <tr>
+        <td>Grades:</td>
+        <td>Maths</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.GradeMath</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>English</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.GradeEnglish</td>
+        
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Swahili</td>
+        <td colspan="4" class="bia-candidate-profile-data">@Model.CurrentCandidate.GradeKiswahili</td>
+        
+    </tr>
+
+    <tr>
+        <td>Nearest Bridge Academy:</td>
+         <td class="bia-candidate-profile-data"> @if (Model.CurrentCandidate.ClosestBridgeSchool != null) {
+                @Model.CurrentCandidate.ClosestBridgeSchool
+                                                 }
+         </td>
+        <td>Location:</td>
+        <td colspan="3" class="bia-candidate-profile-data">
+        @if (Model.CurrentCandidate.ClosestBridgeSchool != null) {
+             @Model.CurrentCandidate.ClosestBridgeLocation
+        }
+         </td>
+        
+        
+    </tr>
+
+</table>
+</fieldset>
+
+<div class="clear-float"></div><br />
+
+<fieldset>
+<legend>
+Candidate Payment Details
+</legend>
+
+<table style="border-style:none;">
+    <tr>
+        <td>MPesa Number:</td>
+        <td colspan="5" class="bia-candidate-profile-data">@Model.CurrentCandidate.MpesaNumber</td>    
+    </tr>
+    
+    <tr>
+        <td>MPesa Name:</td>
+        <td colspan="5" class="bia-candidate-profile-data">@Model.CurrentCandidate.MpesaName</td>       
+    </tr>
+
+    <tr>
+        <td colspan="6">If not yours:</td>       
+    </tr>
+
+    <tr>
+        <td>Provide name of contact:</td>
+        <td colspan="5" class="bia-candidate-profile-data">@Model.CurrentCandidate.MpesaName2ndParty</td>      
+    </tr>
+
+</table>
+</fieldset>
+
+<div class="clear-float"></div><br />
+
+<fieldset>
+
+@if (Model.CurrentCandidate.CandidateType == CandidateType.Teacher) {
+<legend>
+  Candidate Teacher Details
+</legend>
+} else {
+<legend>
+  Candidate Academy Manager Details
+</legend>
+}
+
+<table style="border-style:none;">
+@if (Model.CurrentCandidate.CandidateType == CandidateType.Teacher) {
+    <tr>
+        <td>Are you trained as a teacher?</td>
+        @if (Model.CurrentCandidate.IsTrainedAsTeacher) {
+        <td><input type="checkbox" name="trained" value="yes" checked="checked" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="trained" value="no" disabled="disabled"/> No</td>  
+        } else {      
+        <td><input type="checkbox" name="trained" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="trained" value="no" checked="checked" disabled="disabled" /> No</td> 
+        }
+    </tr>
+    
+    <tr>
+        <td>Have you worked as a teacher?</td>
+        @if (Model.CurrentCandidate.WorkedAsTeacher) {
+        <td><input type="checkbox" name="worked" value="yes" checked = "checked" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="worked" value="no" disabled="disabled" /> No</td>   
+        } else {
+        <td><input type="checkbox" name="worked" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="worked" value="no" disabled="disabled"  checked = "checked" /> No</td>   
+        }     
+    </tr>
+
+    <tr>
+        <td>Are you trained as an Early Childhood Development teacher?</td>
+        @if (Model.CurrentCandidate.ECDTrained) {
+        <td><input type="checkbox" name="ecd" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="ecd" value="no" disabled="disabled" /> No</td>    
+        } else {
+            
+        <td><input type="checkbox" name="ecd" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="ecd" value="no" disabled="disabled"  checked="checked" /> No</td>  
+        }
+    </tr>
+
+    <tr>
+        <td>If yes, where?</td>
+        <td colspan = "2"  class="bia-candidate-profile-data">@Model.CurrentCandidate.ECDTrainedCollege</td>        
+    </tr>
+
+    <tr>
+    
+        <td>At Bridge International Academies, we offer teaching positions at various grade levels; which will you be interested in?</td>
+        @if (Model.CurrentCandidate.InterestedTeachingECD) {
+        <td><input type="checkbox" name="interested" value="ecd" disabled="disabled" checked="checked" />ECD (Baby Class, Nursery, Pre-Unit)</td>
+        <td><input type="checkbox" name="interested" value="upper" disabled="disabled" /> Upper Grades (Class 1-5)</td>
+        }
+        @if (Model.CurrentCandidate.InterestedTeachingUpperGrades) {
+        <td><input type="checkbox" name="interested" value="ecd" disabled="disabled" checked="checked" />ECD (Baby Class, Nursery, Pre-Unit)</td>
+        <td><input type="checkbox" name="interested" value="upper" disabled="disabled" /> Upper Grades (Class 1-5)</td>
+        }
+        @if ((!Model.CurrentCandidate.InterestedTeachingECD) && (!Model.CurrentCandidate.InterestedTeachingUpperGrades)) {
+            <td><input type="checkbox" name="interested" value="ecd" disabled="disabled" />ECD (Baby Class, Nursery, Pre-Unit)</td>
+            <td><input type="checkbox" name="interested" value="upper" disabled="disabled" /> Upper Grades (Class 1-5)</td>
+        }
+    </tr>
+} else {
+    <tr>
+        <td>Have you had experience doing sales or marketing?</td>
+        @if (Model.CurrentCandidate.SaleOrMarketingExperience) {
+        <td><input type="checkbox" name="experience" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="experience" value="no" disabled="disabled" /> No</td> 
+        } else {
+        <td><input type="checkbox" name="experience" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="experience" value="no" disabled="disabled"  checked="checked" /> No</td> 
+        }
+    </tr>
+}
+    <tr>
+        <td>Do you have any objections to a background police check?</td>
+        @if (Model.CurrentCandidate.ObjectionToBackgroundPoliceCheck) {
+        <td><input type="checkbox" name="police" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="police" value="no" disabled="disabled" /> No</td>  
+        } else {
+        <td><input type="checkbox" name="police" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="police" value="no" disabled="disabled"  checked="checked" /> No</td>  
+        }      
+    </tr>
+
+    <tr>
+        <td>Have you ever been convicted of any crime?</td>
+        @if (Model.CurrentCandidate.ConvictedofCrimes) {
+        <td><input type="checkbox" name="crime" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="crime" value="no" disabled="disabled" /> No</td>  
+        } else {
+        <td><input type="checkbox" name="crime" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="crime" value="no" disabled="disabled"  checked="checked" /> No</td> 
+        }      
+    </tr>
+
+    <tr>
+        <td>Do you have a problem with alcohol or drug abuse?</td>
+        @if (Model.CurrentCandidate.AlcoholOrDrugAbuse) {
+        <td><input type="checkbox" name="alcohol" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="alcohol" value="no" disabled="disabled" /> No</td>  
+        } else {
+        <td><input type="checkbox" name="alcohol" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="alcohol" value="no" disabled="disabled"  checked="checked" /> No</td>  
+        }  
+    </tr>
+
+    <tr>
+        <td>Are you available for full-time employment for the next 18 months, including Saturdays?</td>
+        @if (Model.CurrentCandidate.AvailableForFulltimeEmployment) {
+        <td><input type="checkbox" name="fulltime" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+        <td><input type="checkbox" name="fulltime" value="no" disabled="disabled" /> No</td>
+        } else {
+        <td><input type="checkbox" name="fulltime" value="yes" disabled="disabled" /> Yes</td>
+        <td><input type="checkbox" name="fulltime" value="no" disabled="disabled"  checked="checked"  /> No</td>
+        }       
+    </tr>
+
+    <tr>
+        <td>Are you currently enrolled for any course/study/exams that may conflict with the next 14 months full-time employment?</td>
+        @if (Model.CurrentCandidate.HasFulltimeEmploymentConflicts) {
+            <td><input type="checkbox" name="study" value="yes" disabled="disabled" checked="checked" /> Yes</td>
+            <td><input type="checkbox" name="study" value="no" disabled="disabled" /> No</td>  
+        } else {
+            <td><input type="checkbox" name="study" value="yes" disabled="disabled" /> Yes</td>
+            <td><input type="checkbox" name="study" value="no" disabled="disabled"  checked="checked" /> No</td>
+        }     
+    </tr>
+
+</table>
+</fieldset>
+
+<div class="clear-float"></div><br />
+
+<fieldset>
+<legend>
+Candidate Recruitment Details
+</legend>
+
+<table style="border-style:none;">
+    <tr>
+        <td>Interview Location:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.InterviewSiteID</td>
+        <td>Date:</td>  
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.DateOfInterview</td>      
+    </tr>
+
+    <tr>
+        <td>Provided Details:</td>
+        <td></td>
+        <td></td>  
+        <td></td>      
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>National ID:</td>
+        <td colspan="2" class="bia-candidate-profile-data">@Model.CurrentCandidate.NationalID</td>               
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Secondary School Leaving Certificate:</td>
+        <td class="bia-candidate-profile-data">
+        @if (Model.CurrentCandidate.SecondarySchoolLeavingCertificate) {
+        <text>Yes</text>
+        } else {<text>No</text>}
+        </td>  
+        <td></td>      
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>K.C.S.E. Result Slip</td>
+        <td class="bia-candidate-profile-data">
+        @if (Model.CurrentCandidate.KCSEResultSlip) {
+            <text>Yes</text>
+        } else {<text>No</text>
+        }</td>  
+        <td></td>      
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>Mean Grade:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.GradeMean</td>  
+        <td></td>      
+    </tr>
+
+    <tr>
+        <td>Recruitment Results:</td>
+        <td class="bia-candidate-profile-data">@Model.CurrentCandidate.InvitationStatus</td>
+        <td></td>  
+        <td></td>      
+    </tr>
+
+</table>
+</fieldset>
+
+<br /><br />
+<br style="clear: both" />
+
+    <fieldset>
+    <legend>Candidate Scores</legend>
+<div class="bia-candidate-results-table">
+<table style="border-style:none;"><tr><td>
+<table style="border-style:solid;">
+    <tr>
+    <th style="border:1px thin">
+        Assessment
+    </th>
+    @foreach (var week in Model.WeekNumbers) {
+    <th>
+        Week @week   
+    </th>    
+    }
+    </tr>   
+    @foreach (var row in @Model.CandidatePerformanceGroupedByAssessmentType) {
+        <tr>
+        <td style="border-width:1px; border-style:solid;">@row["AssessmentType"]</td>
+        @foreach (var week in Model.WeekNumbers) {
+        <td  style="border-width:1px; border-style:solid;">
+        @{
+             
+            var split = @row[@week].ToString().Split(',');
+            if (split.Count() > 1) {
+                var _id = split[0].Replace("[", "");
+                var _score = split[1].Replace("]", ""); 
+
+               <div class="edit" id="@_id" style="text-align:center;">
+                     @_score
+              </div>
+            }
+         }
+       
+    </td>
+        }    
+    
+        </tr>
+    }
+    </table>    
+    </td><td style="padding-left: 50px">
+    <table style="border-style:none;">
+    <tr>
+        <td width="180">Star Rating</td><td class="bia-candidate-profile-data">@Model.CandidateModel.StarGrade</td>
+    </tr>
+    <tr>
+        <td>Hiring Status</td><td class="bia-candidate-profile-data">@Model.CurrentCandidate.HiringStatus</td>
+    </tr>
+    <tr>
+        <td>Position</td><td class="bia-candidate-profile-data">@if (Model.CandidateModel.AssignedPosition != null) {@Model.CandidateModel.AssignedPosition.SerialNumber } else { <text>&nbsp;</text>}</td>
+    </tr>
+    <tr>
+        <td>Academy</td><td class="bia-candidate-profile-data">@if (Model.CandidateModel.AssignedPosition != null) {@Model.CandidateModel.AssignedPosition.Academy.TargetArea} else {@Model.CurrentCandidate.Academy.TargetArea}</td>
+    </tr>
+    <tr>
+        <td>Location</td><td class="bia-candidate-profile-data">@if (Model.CandidateModel.AssignedPosition != null) {@Model.CandidateModel.AssignedPosition.Academy.Town} else {@Model.CurrentCandidate.Academy.Town}</td>
+    </tr>
+    @if (!Model.CandidateModel.RelocationStatus) {
+    <tr>
+        <td>Relocated</td><td class="bia-candidate-profile-data">No</td>
+    </tr>
+    } else {
+    <tr>
+        <td>Relocated</td><td class="bia-candidate-profile-data">Yes</td>
+    </tr>
+    <tr>
+        <td>Original Academy</td><td class="bia-candidate-profile-data">@Model.CandidateModel.OriginalAcademy</td>
+    </tr>
+    }
+    <tr>
+        <td>Candidate Status: <span  class="bia-candidate-profile-data">@Model.CurrentCandidate.CurrentCandidateStatus</span></td>
+        <td> @Html.ActionLink("Change Status", "ChangeCandidateStatus", new { id = @Model.CurrentCandidate.NationalID })</td>
+    </tr>
+    </table>
+    
+    </td></tr></table>        
+</div>
+
+
+
+</fieldset>
+
+
+</div>
+    

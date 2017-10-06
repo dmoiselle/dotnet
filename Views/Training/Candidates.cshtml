@@ -1,0 +1,128 @@
+﻿@using Bridge.Web.Models
+@model CandidatesModel
+@{
+    ViewBag.Title = "Candidates";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+}
+<h2>Candidates</h2>
+<div id="bia-candidate-filters">
+    
+    <div class="bia-training-site">
+        <label class="bia-training-site-label" for="bia-training-site-dropdown">
+            Training Site:
+        </label>
+        @Html.DropDownList("TrainingSiteID", Model.TrainingSites, "All", new { id = "bia-training-site-dropdown" })
+    </div>
+
+    <div class="bia-training-class">
+        <label class="bia-training-class-label" for="bia-training-class-dropdown">
+            Training Class:
+        </label>
+        @Html.DropDownList("TrainingClassID", Model.TrainingClasses, "All", new { id = "bia-training-class-dropdown" })
+    </div>
+
+    <div class="bia-candidate-type">
+        <label class="bia-candidate-type-label" for="bia-candidate-type-dropdown">
+            Candidate Type:
+        </label>
+        @Html.DropDownList("CandidateType", Model.CandidateTypes, new { id = "bia-candidate-type-dropdown" })
+    </div>
+    @Html.Hidden( "CandidatesURL", Url.Action( "Candidates" ) )
+</div>
+<div class="clear-float"></div>
+<div class="bia-candidate-results-table">
+    <table id="bia-candidate-results">
+        <thead>
+            <tr>
+                <th class="bia-name">
+                   Candidate 
+                </th>
+                <th >
+                   National ID
+                </th>
+                @foreach (var week in Model.WeekNumbers)
+                { 
+                    <th class="bia-week-@week-score bia-weekly-score-heading">
+                        Week @week
+                    </th>
+                }
+                <th class="bia-summary-score">
+                    Summary Score
+                </th>
+                <th class="bia-summary-score">
+                    Star Rating
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var candidate in Model.Candidates)
+            {
+                <tr class="bia-candidate">
+                    <td class="bia-name">@Html.ActionLink(
+                            candidate.FullName,
+                            "CandidateProfile", 
+                            new { id =  candidate.NationalID }
+                            ) 
+                    </td>
+                    <td>@candidate.NationalID
+                    </td>
+                    @foreach (var week in Model.WeekNumbers)
+                    {
+                        <td class="bia-week-@week-score bia-weekly-score">
+                            @if (candidate.WeeklyAssessments.Any(a => a.WeekNumber == week))
+                            {
+                                @string.Format("{0:0%}", candidate.WeeklyAssessments.First(a => a.WeekNumber == week).Score)
+                            }
+                            else
+                            {
+                                <text>--</text>
+                            }
+                        </td>
+                    }
+                    <td class="bia-summary-score">
+                        @if (candidate.SummaryScore.HasValue)
+                        {
+                            @string.Format("{0:0%}", candidate.SummaryScore)
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }                       
+                    </td>
+                    <td class="bia-summary-score">
+                        @if (candidate.StarGrade.HasValue)
+                        {
+                            <span class="rating-static rating-@candidate.StarGrade"></span>
+                        }
+                        else
+                        {
+                            <span class='rating-static rating-0'></span>
+                        }
+                        <span style='display:none'>@candidate.SummaryScore</span>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section PageSpecificScripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var candidatesgui = new bia_candidates();
+            candidatesgui.Initialize();
+            
+            bia_init_right_hand_links();
+            
+            $('#bia-candidate-results').dataTable({
+                    "bJQueryUI": true,
+                    bDestroy: true,
+		            "sPaginationType": "full_numbers"                                      
+                }); 
+        });
+    </script>
+}

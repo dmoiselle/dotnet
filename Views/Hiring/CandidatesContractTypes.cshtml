@@ -1,0 +1,33 @@
+﻿@model CandidatesContractTypesModel
+
+@{
+    ViewBag.Title = "CandidatesContractTypes";
+}
+<table style="width:100%;background-color:Silver;color:White">
+<thead>
+<tr style="height:30">
+<td>
+        <div>
+            <label for="bia-hiring-candidate-type-dropdown" class="bia-hiring-candidate-type-label">
+                Candidate Type</label>
+                @Html.DropDownList("CandidateType", Model.CandidateTypes, "All", new { id = "bia-hiring-candidate-type-dropdown",  @class = "autoSubmit" })
+            
+        </div>
+
+</td>
+<td>
+        <div style="text-align:right">
+            <label for="bia-contract-type-dropdown" class="bia-hiring-contract-type-label">Contract Type</label>
+                @Html.DropDownList("ContractType", Model.ContractTypes, "All", new { id = "bia-contract-type-dropdown", @class = "autoSubmit" })
+            
+        </div>
+
+</td>
+
+</tr>
+
+<tr></tr>
+</thead>
+</table>
+        
+

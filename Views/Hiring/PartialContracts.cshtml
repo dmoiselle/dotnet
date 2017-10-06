@@ -1,0 +1,38 @@
+﻿
+@model CandidatesContractTypesModel
+@using Bridge.Web.Models;
+
+<fieldset>
+    <legend>
+        Contracts
+    </legend>
+    
+    @using (Html.BeginForm("HiringDashboard", "Hiring", FormMethod.Get))
+    {
+         <table style="width:100%;background-color:Silver;color:White">
+<thead>
+<tr>
+<td>
+        <div>
+            <label for="bia-hiring-candidate-type-dropdown" class="bia-hiring-dashboard-candidate-type-label">
+                <strong>Candidate Type</strong></label>
+                @Html.DropDownList("Contracts_CandidateType", Model.CandidateTypes, new { id = "bia-hiring-candidate-type-dropdown", @class = "autoSubmit" })
+            
+        </div>
+        </td></tr></thead></table>
+ 
+         <ul>
+            @foreach (var item in Model.ContractListItems)
+            {
+    
+                <li>You have <b>@item.NoOfPositions </b> @item.ContractType positions, <b>@item.Offered</b> offered, <b>@item.Accepted</b> accepted, <b>@item.Declined</b> declined.</li>
+	
+            }
+
+        </ul>
+    }
+ 
+     <br />
+  
+
+</fieldset>

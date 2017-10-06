@@ -1,0 +1,369 @@
+﻿@using Bridge.Web.Models
+@model HiringCandidatesModel
+@{
+    ViewBag.Title = "Candidates List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageSpecificScriptIncludes {
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" type="text/javascript"></script>
+}
+
+
+<h2>
+    Candidates</h2>
+<div id="bia-hiring-candidate-filters">
+    <div style="margin: 0px">
+        <div id="bia-star-rating" class="bia-hiring-candidate-option">
+            <label class="bia-star-rating-label" for="bia-star-rating-dropdown">
+                Rating:
+            </label>
+            @Html.DropDownList("starRating", Model.StarRating, "All", new { id = "bia-star-rating-dropdown" })
+        </div>
+        <div id="bia-hiring-target-school" class="bia-hiring-candidate-option">
+            <label class="bia-hiring-target-school-label" for="bia-hiring-target-school-dropdown">
+                School:
+            </label>
+            @Html.DropDownList("targetSchoolID", Model.TargetAcademies, "All", new { id = "bia-target-academy-dropdown" })
+        </div>
+        <div id="bia-candidate-type" class="bia-hiring-candidate-option">
+            <label class="bia-candidate-type-label" for="bia-candidate-type-dropdown">
+                Candidate Type:
+            </label>
+            @Html.DropDownList("candidateType", Model.CandidateTypes, new { id = "bia-candidate-type-dropdown" })
+        </div>
+        <div id="bia-hiring-status" class="bia-hiring-candidate-option">
+            <label class="bia-hiring-status-label" for="bia-hiring-status-dropdown">
+                Status:
+            </label>
+            @Html.DropDownList("hiringStatus", Model.HiringStatuses, "All", new { id = "bia-hiring-status-dropdown" })
+        </div>
+    </div>
+    @Html.Hidden("CandidatesURL", Url.Action("Candidates"))
+</div>
+<div class="clear-float">
+</div>
+<div class="bia-hiring-candidate-table-wrapper">
+    <table id="bia-hiring-candidates-table" style="width:100%">
+        <thead>
+            <tr>
+                <th rowspan="2">
+                    Name
+                    <input type="hidden" id="bia-assignees-recruitment-assessment-types-count" value="@Model.RecruitmentAssessmentTypes.Count()" />
+                    <input type="hidden" id="bia-assignees-training-assessment-types-count" value="@Model.TrainingAssessmentTypes.Count()" />
+                </th>
+                <th rowspan="2">
+                    Academy
+                </th>
+                @if (Model.RecruitmentAssessmentTypes.Count() > 0)
+                {
+                    <th colspan="@Model.RecruitmentAssessmentTypes.Count()" style="border:inherit;white-space:nowrap;text-align:center;">
+                        Recruitment Scores (%)
+                    </th>
+                }
+                <th colspan="@Model.TrainingAssessmentTypes.Count()" style="border:inherit;border-left:1px solid #D3D3D3;white-space:nowrap;text-align:center;">
+                    Training Scores (%)
+                </th>
+                <th class="bia-summary-score" rowspan="2">
+                    Summary Score
+                </th>
+                <th class="bia-summary-score" rowspan="2">
+                    Rating
+                </th>
+                <th rowspan="2">
+                    Facilitator Rec.
+                </th>
+                <th rowspan="2">
+                    Facilitator Remarks
+                </th>
+                <th rowspan="2">
+                    Hiring Status
+                </th>
+                <th rowspan="2">
+                    Position
+                </th>
+                <th rowspan="2">
+                    Contract Status
+                </th>
+            </tr>
+            <tr>
+                @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                {
+                    <th>
+                        @assessmentType.ToString()
+                    </th>  
+                }
+                @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                {
+                    <th>
+                        @assessmentType.ToString()
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var candidate in Model.Candidates)
+            {
+                <tr class="bia-candidate">
+                    <td class='bia-hiring-candidate-name'>
+                        @Html.ActionLink(candidate.FullName, "CandidateProfile", "Training", new { id = candidate.NationalID }, new { id = candidate.NationalID })
+                    </td>
+                    <td>@candidate.AssignedAcademy
+                    </td>
+                    @foreach (var assessmentType in Model.RecruitmentAssessmentTypes)
+                    {
+                        <td>
+                            @if (candidate.AssessmentAverages.ContainsKey(assessmentType))
+                            {
+                                @string.Format("{0:0}", candidate.AssessmentAverages[assessmentType])
+                            }
+                            else
+                            {
+                                <text>--</text>
+                            }
+                        </td>  
+                    }
+                    @foreach (var assessmentType in Model.TrainingAssessmentTypes)
+                    {
+                        <td>
+                            @if (candidate.AssessmentAverages.ContainsKey(assessmentType))
+                            {
+                                @string.Format("{0:0}", candidate.AssessmentAverages[assessmentType])
+                            }
+                            else
+                            {
+                                <text>--</text>
+                            }
+                        </td>  
+                    }
+                    <td class="bia-assessment-score-average">
+                        @if (candidate.SummaryScore.HasValue)
+                        {
+                            @string.Format("{0:0%}", candidate.SummaryScore)
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                    </td>
+                    <td class="bia-assessment-score-average">
+                        @if (candidate.StarGrade.HasValue)
+                        {
+                            @candidate.StarGrade
+                        }
+                        else
+                        {
+                            <text>--</text>
+                        }
+                        <span style='display: none'>@candidate.SummaryScore</span>
+                    </td>
+                    <td>
+                        @candidate.FacilitatorRecommendedPosition
+                    </td>
+                    <td>
+                        @candidate.FacilitatorRemarks
+                    </td>
+                    <td>
+                    <div candidateID="@candidate.CandidateID" serialNumber="@candidate.SerialNumber" hiringStatus="@candidate.HiringStatus">
+                        @if (@candidate.HiringStatus.ToString() != "Assigned")
+                        {
+                            <span class='bia-candidate-hiring-status' title="Double-click to change">@candidate.HiringStatus.ToString()</span>
+                        }
+                        else
+                        {
+                            <span>@candidate.HiringStatus.ToString()</span>
+                        }
+                        </div> 
+                    </td>
+                    <td>
+                        @if (!String.IsNullOrEmpty(candidate.DisplayPosition))
+                        {
+                            @candidate.DisplayPosition<br/><span style="font-size:smaller;white-space:nowrap;">@candidate.SerialNumber</span>
+                        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </td>
+                    <td style="border-right: 0px transparent;">
+                    @if (candidate.AcceptanceStatus.HasValue)
+                    {
+                        <div candidateID="@candidate.CandidateID" serialNumber="@candidate.SerialNumber" acceptanceStatus="@candidate.AcceptanceStatus">
+                        @if (@candidate.AcceptanceStatus.Value.ToString() != "Declined")
+                        {
+                            <span class='bia-hiring-candidate-serial-number' title="Double-click to change">@candidate.AcceptanceStatus</span>
+                        }
+                        else
+                        {
+                            <span>@candidate.AcceptanceStatus.Value.ToString()</span>
+                        }
+                        </div>                                                
+                    }
+                    else
+                    {
+                        <span>&nbsp;</span>
+                    }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section PageSpecificScripts {
+    <script type="text/javascript" src="/Scripts/jquery.jeditable.js"></script>
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        $.ajaxSetup({
+            cache: false
+        });
+        var hiringGui = new bia_hiring_new_candidates();
+        hiringGui.Initialize();
+        var recruitmentCount = parseInt($("#bia-assignees-recruitment-assessment-types-count").val(), 10);
+        var trainingCount = parseInt($("#bia-assignees-training-assessment-types-count").val(), 10);
+        // assign button column
+        var scoreidx = 2 + (recruitmentCount + trainingCount);
+
+        $("#bia-hiring-candidates-table").dataTable({
+            "aaSorting": [[scoreidx, "desc"]],
+            "bJQueryUI": true,
+            "bDestroy": true,
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [
+                    
+                ],
+
+            "fnDrawCallback": function () {
+                BindButtonColumn();
+            }
+        });
+    });
+
+    function changeAcceptanceStatus(element) {
+        var parent = $(element).parent();
+        var candidateID = $(parent).attr("candidateID");
+        var serialNumber = $(parent).attr("serialNumber");
+        var acceptanceStatus = $(parent).attr("acceptanceStatus");
+        var elmid = candidateID + serialNumber;
+        
+        var builder = [];        
+        builder.push("<select id='" + elmid + "'>");
+        if (acceptanceStatus == "Offered") {
+            builder.push("<option value='' selected='selected'></option>");
+            builder.push("<option value='Accepted'>Accepted</option>");
+        } else {
+            builder.push("<option value='Accepted' selected='selected'>Accepted</option>");
+        }
+        builder.push("<option value='Declined'>Declined</option>");
+        builder.push("</select>");
+        parent.html(builder.join(''));
+
+        $("#" + elmid).focus();
+
+        $("#" + elmid).change(function (option) {
+            var optionSelected = $(this).val();
+            if (optionSelected != "" && optionSelected != acceptanceStatus) {
+                var candidateName = $.trim(parent.closest('tr').find('.bia-hiring-candidate-name').text());
+
+                bia_show_confirmation_dialog(
+                    "Change contract status",
+                    "Change contract acceptance status for <b>" + candidateName + "</b> from <b>" + acceptanceStatus + "</b> to <b>" + optionSelected + "</b>",
+                    function () {
+                        $.post("/Hiring/ChangeContractStatus/?serialNumber=" + serialNumber + "&candidateID=" + candidateID + "&contractStatus=" + optionSelected, function (result) {
+                            if (result == serialNumber) {
+                                $(parent).attr({ "acceptanceStatus": optionSelected });
+                            } else {
+                                bia_show_dialog("Error", result);
+                            }
+                        });
+
+                        if (optionSelected != "Declined") {
+                            parent.html("<span class='bia-hiring-candidate-serial-number' title='Double-click to change'>" + optionSelected + "</span>");
+                            $(".bia-hiring-candidate-serial-number").unbind('dblclick').bind('dblclick', function () {
+                                changeAcceptanceStatus(this);
+                            });
+                        }
+                        else {
+                            parent.html("<span>" + optionSelected + "</span>");
+                        }
+                    },
+                    function () {
+                        parent.html("<span class='bia-hiring-candidate-serial-number' title='Double-click to change'>" + acceptanceStatus + "</span>");
+                        $(".bia-hiring-candidate-serial-number").unbind('dblclick').bind('dblclick', function () {
+                            changeAcceptanceStatus(this);
+                        });
+                    });
+            }
+        }).bind("focusout", function () {
+            parent.html("<span class='bia-hiring-candidate-serial-number' title='Double-click to change'>" + acceptanceStatus + "</span>");
+            $(".bia-hiring-candidate-serial-number").unbind('dblclick').bind('dblclick', function () {
+                changeAcceptanceStatus(this);
+            });
+        });
+    }
+
+    function changeHiringStatus(element) {
+        var parent = $(element).parent();
+        var candidateID = $(parent).attr("candidateID");
+        var hiringStatus = $(parent).attr("hiringStatus");
+        var elmid = "HiringStatus" + candidateID;
+        
+        var builder = [];        
+        builder.push("<select id='" + elmid + "'>");
+        builder.push("<option value='Available' " + ((hiringStatus == "Available") ? "selected='selected'" : "") + ">Available</option>");
+        builder.push("<option value='Backup' " + ((hiringStatus == "Backup") ? "selected='selected'" : "") + ">Backup</option>");
+        builder.push("<option value='Rejected' " + ((hiringStatus == "Rejected") ? "selected='selected'" : "") + ">Rejected</option>");
+        builder.push("</select>");
+        parent.html(builder.join(''));
+
+        $("#" + elmid).focus();
+
+        $("#" + elmid).change(function (option) {
+            var optionSelected = $(this).val();
+            if (optionSelected != hiringStatus) {
+                var candidateName = $.trim(parent.closest('tr').find('.bia-hiring-candidate-name').text());
+
+                bia_show_confirmation_dialog(
+                    "Change hiring status",
+                    "Change hiring status for <b>" + candidateName + "</b> from <b>" + hiringStatus + "</b> to <b>" + optionSelected + "</b>",
+                    function () {
+                        $.post("/Hiring/ChangeHiringStatus/?candidateID=" + candidateID + "&hiringStatus=" + optionSelected, function (result) {
+                            if (result == candidateID) {
+                                $(parent).attr({ "hiringStatus": optionSelected });
+                            } else {
+                                bia_show_dialog("Error", result);
+                            }
+                        });
+
+                        parent.html("<span class='bia-candidate-hiring-status' title='Double-click to change'>" + optionSelected + "</span>");
+                        $(".bia-candidate-hiring-status").unbind('dblclick').bind('dblclick', function () {
+                            changeHiringStatus(this);
+                        });
+                    },
+                    function () {
+                        parent.html("<span class='bia-candidate-hiring-status' title='Double-click to change'>" + hiringStatus + "</span>");
+                        $(".bia-candidate-hiring-status").unbind('dblclick').bind('dblclick', function () {
+                            changeHiringStatus(this);
+                        });
+                    });
+            }
+        }).bind("focusout", function () {
+            parent.html("<span class='bia-candidate-hiring-status' title='Double-click to change'>" + hiringStatus + "</span>");
+            $(".bia-candidate-hiring-status").unbind('dblclick').bind('dblclick', function () {
+                changeHiringStatus(this);
+            });
+        });
+    }
+
+    function BindButtonColumn() {
+        $(".bia-hiring-candidate-serial-number").unbind('dblclick').bind('dblclick', function () {
+            changeAcceptanceStatus(this);
+        });
+
+        $(".bia-candidate-hiring-status").unbind('dblclick').bind('dblclick', function () {
+            changeHiringStatus(this);
+        });
+    }
+
+
+
+</script>
